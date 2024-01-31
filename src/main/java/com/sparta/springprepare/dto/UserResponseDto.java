@@ -5,9 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class UserResponseDto {
-    private Long id;
-    private String username;
-    private String password;
+
+    private final Long id;
+    private final String username;
+    private final String password;
 
     public UserResponseDto(User user) {
         this.id = user.getId();

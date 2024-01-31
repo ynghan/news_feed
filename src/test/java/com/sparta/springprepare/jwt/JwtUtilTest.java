@@ -21,7 +21,7 @@ class JwtUtilTest {
         String token = jwtUtil.createToken("Robbie", UserRoleEnum.USER);
 
         // Jwt 쿠키 저장
-        jwtUtil.addJwtToCookie(token,res);
+//        jwtUtil.addJwtToCookie(token,res);
 
         return "createJwt : " + token;
     }
