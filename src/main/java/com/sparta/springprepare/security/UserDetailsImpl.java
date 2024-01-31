@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
+// UserDetails 클래스 기능을 커스텀하는 클래스
+// 특정 사용자의 토큰 정보를 조회하는 클래스
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
@@ -20,6 +22,8 @@ public class UserDetailsImpl implements UserDetails {
     public User getUser() {
         return user;
     }
+
+    public String getEmail() {return user.getEmail(); }
 
     @Override
     public String getPassword() {

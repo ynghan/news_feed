@@ -28,18 +28,13 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    private String profile;
+
+    private String introduce;
+
     // 인적 정보
     @Column(nullable = false, unique = true)
     private String username;
-
-    private int age;
-    private String gender;
-    private String country;
-    private String phone_num;
-
-    // 계정 정보
-    private String identity;
-
     @Column(nullable = false)
     private String password;
 
@@ -53,15 +48,25 @@ public class User {
 
     // 히스토리
     private LocalDateTime created_date;
+//    private int age;
+//    private String gender;
+//    private String country;
+//    private String phone_num;
+
+    // 계정 정보
+//    private String identity;
+
+
+
+
 
     /**
      * 연관 관계 매핑
      * User : Follow = 1 : N
-     * User : Feed = 1 : 1
+     * User : Post = 1 : N
      */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id")
-    private Feed feed;
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "follower")
     private List<Follow> followers = new ArrayList<>();

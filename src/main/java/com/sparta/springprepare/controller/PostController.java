@@ -1,36 +1,46 @@
 package com.sparta.springprepare.controller;
 
 
-import com.sparta.springprepare.domain.User;
-import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.dto.CountDto;
+import com.sparta.springprepare.dto.PostRequestDto;
+import com.sparta.springprepare.dto.PostResponseDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.GrantedAuthority;
+import com.sparta.springprepare.service.PostService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@Slf4j
+@RestController
 @RequestMapping("/api")
 public class PostController {
 
-    @GetMapping("/posts")
-    public String getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // Authentication의 Principal에 저장된 UserDetailsImpl을 가져옵니다.
-        User user = userDetails.getUser();
-        System.out.println("user.getUsername() = " + user.getUsername());
+    private final PostService postService;
 
-        return "redirect:/";
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
-    @Secured(UserRoleEnum.Authority.ADMIN)
-    @GetMapping("/products/secured")
-    public String getPostsByAdmin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println("userDetails.getUsername() = " + userDetails.getUsername());
-        for (GrantedAuthority authority : userDetails.getAuthorities()) {
-            System.out.println("authority.getAuthority() = " + authority.getAuthority());
-        }
-        return "redirect:/";
+
+    // 게시물 등록하기
+    @PostMapping("/posts")
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 응답 보내기
+        return postService.createPost(requestDto, userDetails.getUser());
     }
+
+    // 관심 게시물 조회하기
+    @GetMapping("posts")
+    public List<PostResponseDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 응답 보내기
+        return postService.getPosts(userDetails.getUser());
+    }
+    // 사용자 게시물 개수 조회하기
+    @GetMapping("/post/count")
+    public CountDto getPostCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostCount(userDetails.getUser());
+    }
+
 }

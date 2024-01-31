@@ -12,10 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,16 +27,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    // 로그인 페이지
     @GetMapping("/login-page")
     public String loginPage() {
         return "login";
     }
-
+    // 회원가입 페이지
     @GetMapping("/signup")
     public String signupPage() {
         return "signup";
     }
-
+    // 회원가입
     @PostMapping("/signup")
     public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
@@ -67,3 +65,4 @@ public class UserController {
         return new UserInfoDto(username, isAdmin);
     }
 }
+

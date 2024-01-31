@@ -16,6 +16,7 @@ import java.util.Date;
 
 @Slf4j(topic = "JwtUtil")
 @Component
+// jwt 토큰에 필요한 모든 정보를 저장해 놓고 활용하는 클래스 : 헤더에 jwt를 저장하는 방식 사용
 public class JwtUtil {
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";

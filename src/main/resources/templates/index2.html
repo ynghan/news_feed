@@ -16,34 +16,22 @@
     <title>피드 게시판</title>
 </head>
 <body>
-
 <div class="header" style="position:relative;">
     <!--headr-->
     <!-- Spring Security 컨텍스트에서 현재 로그인한 사용자의 이름을 가져옵니다. -->
     <div id="header-title-login-user">
-        <span id="username"></span>
+        <span id="username" style="color: green" th:if="${#authentication}" th:text="${#authentication.name}"></span>
     </div>
-
-    <span id="post" style="font-size: medium">게시물</span>
-    <span id="post_count"></span>
-
-    <span id="followee" style="font-size: medium">팔로우</span>
-    <span id="followee_count"></span>
-
-    <span id="follower" style="font-size: medium">팔로워</span>
-    <span id="follower_count"></span>
-
 </div>
-
-
+<span id="post" style="font-size: medium">게시물</span>
+<span id="follow" style="font-size: medium">팔로우</span>
+<span id="follower" style="font-size: medium">팔로워</span>
 <div id="header-title-select-shop">
     <span th:text="username"></span>
 </div>
-
 <a id="login-text" href="javascript:logout()">
     로그아웃
 </a>
-
 <!--/headr-->
 </div>
 <div class="nav">
@@ -54,7 +42,6 @@
         탐색하기
     </div>
 </div>
-<!-- 게시물 공간 -->
 <div id="see-area">
     <div id="post-container">
 
