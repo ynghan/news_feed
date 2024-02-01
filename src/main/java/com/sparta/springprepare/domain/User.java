@@ -46,6 +46,7 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+
     // 히스토리
     private LocalDateTime created_date;
 //    private int age;
@@ -55,10 +56,6 @@ public class User {
 
     // 계정 정보
 //    private String identity;
-
-
-
-
 
     /**
      * 연관 관계 매핑
@@ -81,6 +78,10 @@ public class User {
         this.password = requestDto.getPassword();
         this.email = requestDto.getEmail();
         this.role = requestDto.getUserRoleEnum();
+    }
+
+    public void changeProfile(String profile) {
+        this.profile = profile;
     }
 
     public void update(UserRequestDto requestDto) {

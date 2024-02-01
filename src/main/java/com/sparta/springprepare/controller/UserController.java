@@ -2,6 +2,8 @@ package com.sparta.springprepare.controller;
 
 
 import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.dto.CountDto;
+import com.sparta.springprepare.dto.ProfileDto;
 import com.sparta.springprepare.dto.SignupRequestDto;
 import com.sparta.springprepare.dto.UserInfoDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -63,6 +66,32 @@ public class UserController {
         boolean isAdmin = (role == UserRoleEnum.ADMIN);
 
         return new UserInfoDto(username, isAdmin);
+    }
+
+    @GetMapping("/followee/count")
+    @ResponseBody
+    public CountDto getUserFolloweeCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getFolloweeCount(userDetails.getUser());
+    }
+
+    @GetMapping("/follower/count")
+    @ResponseBody
+    public CountDto getUserFollowerCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getFollowerCount(userDetails.getUser());
+    }
+
+//    @GetMapping("/profile")
+//    @ResponseBody
+//    public ProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return userService.getProfile(userDetails.getUser());
+//    }
+
+    @PostMapping("/profile")
+    @ResponseBody
+    public ProfileDto postProfile(@RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return userService.postProfile(file, userDetails.getUser());
+
     }
 }
 

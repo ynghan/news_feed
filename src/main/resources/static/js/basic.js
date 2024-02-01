@@ -13,8 +13,13 @@ $(document).ready(function () {
         return;
     }
 
-
+    // 게시물 수, 팔로우 수, 팔로워 수
     countPost();
+    countFollowee();
+    countFollower();
+
+    // 프로필 사진
+
 
     $.ajax({
         type: 'GET',
@@ -73,6 +78,17 @@ $(document).ready(function () {
     $('#search-area').hide();
 })
 
+$.ajax({
+    // ...
+    error: function(jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 401) {
+            // 401 Unauthorized 응답을 받았을 때의 처리
+            console.log(jqXHR.responseText);  // "Token expired"
+            window.location.href = "/login";
+        }
+    }
+});
+
 
 function countPost() {
 
@@ -83,7 +99,7 @@ function countPost() {
         url: dataSource,
         contentType: 'application/json',
         success: function (response) {
-            $('#post_count').text(response.count);
+            $('#post_count').text(response.count || 0);
         },
         error(error, status, request) {
             if (error.status === 403) {
@@ -95,33 +111,69 @@ function countPost() {
     });
     return "";
 }
-function showPost(isAdmin = false) {
-    /**
-     * 관심상품 목록: #product-container
-     * 검색결과 목록: #search-result-box
-     * 관심상품 HTML 만드는 함수: addProductItem
-     */
 
-    let dataSource = null;
+function countFollowee() {
 
-    // admin 계정
-    if (isAdmin) {
-        dataSource = `/api/admin/posts`;
-    } else {
-        dataSource = `/api/posts`;
-    }
+    dataSource = `/api/user/followee/count`;
 
     $.ajax({
         type: 'GET',
         url: dataSource,
         contentType: 'application/json',
         success: function (response) {
-            $('#post-container').empty();
-            for (let i = 0; i < response.length; i++) {
-                let post = response[i];
-                let tempHtml = addPostItem(post);
-                $('#post-container').append(tempHtml);
+            $('#followee_count').text(response.count || 0);
+        },
+        error(error, status, request) {
+            if (error.status === 403) {
+                $('html').html(error.responseText);
+                return;
             }
+            logout();
+        }
+    });
+    return "";
+}
+
+function countFollower() {
+
+    dataSource = `/api/user/follower/count`;
+
+    $.ajax({
+        type: 'GET',
+        url: dataSource,
+        contentType: 'application/json',
+        success: function (response) {
+            $('#follower_count').text(response.count || 0);
+        },
+        error(error, status, request) {
+            if (error.status === 403) {
+                $('html').html(error.responseText);
+                return;
+            }
+            logout();
+        }
+    });
+    return "";
+}
+
+function uploadProfile() {
+    $('#profile-input').click();
+}
+
+function setProfile(event) {
+
+    const file = event.target.files[0]
+    const formData = new FormData();
+    formData.append('file', file);
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/user/profile',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            $('#profile-image').attr('src', response.profile);
         },
         error(error, status, request) {
             if (error.status === 403) {
@@ -132,30 +184,6 @@ function showPost(isAdmin = false) {
         }
     });
 }
-
-function addPostItem(post) {
-    console.log(post)
-    return `<div class="post-card">
-                <div onclick="window.location.href='${post.link}'">
-                    <div class="card-header">
-                        <img src="${post.image}"
-                             alt="">
-                    </div>
-                    <div class="card-body">
-                        <div class="title">
-                            ${post.title}
-                        </div>
-                        <div class="lprice">
-                            <span>${numberWithCommas(post.lprice)}</span>원
-                        </div>
-                        <div class="isgood ${post.lprice > post.myprice ? 'none' : ''}">
-                            최저가
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-}
-
 
 function logout() {
     // 토큰 삭제

@@ -1,13 +1,25 @@
 package com.sparta.springprepare.service;
 
+import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.dto.CountDto;
+import com.sparta.springprepare.dto.ProfileDto;
 import com.sparta.springprepare.dto.SignupRequestDto;
 import com.sparta.springprepare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -52,4 +64,56 @@ public class UserService {
         User user = new User(username, password, email, role);
         userRepository.save(user);
     }
+
+    public ProfileDto postProfile(MultipartFile file, User user) {
+        // 파일을 저장할 디렉토리 경로
+        String directory = "/Users/jeong-yeonghan/work/news_feed/spring-prepare/src/main/resources/static/image/ ";
+
+        // 파일의 원래 이름
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+
+        try {
+            // 디렉토리가 없으면 생성
+            if (!Files.exists(Paths.get(directory))) {
+                Files.createDirectories(Paths.get(directory));
+            }
+
+            // 파일 데이터를 디렉토리에 저장
+            Path destination = Paths.get(directory + filename);
+            Files.write(destination, file.getBytes());
+
+            // 파일의 URL 또는 경로를 사용자의 프로필에 설정
+            user.changeProfile(destination.toString());
+
+            userRepository.save(user);
+
+            return new ProfileDto(destination.toString());
+
+        } catch (IOException e) {
+            throw new RuntimeException("File saving failed!", e);
+        }
+    }
+
+    @Transactional
+    public CountDto getFolloweeCount(User user) {
+        Optional<User> findUser = userRepository.findByUsername(user.getUsername());
+        List<Follow> followees = findUser.get().getFollowees();
+        int count = followees.size();
+        return new CountDto(count);
+    }
+
+    @Transactional
+    public CountDto getFollowerCount(User user) {
+        Optional<User> findUser = userRepository.findByUsername(user.getUsername());
+        List<Follow> followers = findUser.get().getFollowers();
+        int count = followers.size();
+        return new CountDto(count);
+    }
+
+//    public ProfileDto getProfile(User user) {
+//        Optional<User> findUser = userRepository.findByUsername(user.getUsername());
+//        String profile = findUser.get().getProfile();
+//        return new ProfileDto(profile);
+//    }
+
 }

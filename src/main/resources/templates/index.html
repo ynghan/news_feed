@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -16,35 +16,46 @@
     <title>피드 게시판</title>
 </head>
 <body>
+<!--header-->
 
-<div class="header" style="position:relative;">
-    <!--headr-->
-    <!-- Spring Security 컨텍스트에서 현재 로그인한 사용자의 이름을 가져옵니다. -->
-    <div id="header-title-login-user">
-        <span id="username"></span>
+<div class="header" style="position:relative; display: flex; justify-content: space-between;">
+    <div id="user-post-info" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+
+        <div id="user-profile" style="flex: 1; text-align: center;">
+            <button id="profile-button" onclick="uploadProfile()">사진</button>
+            <input id="profile-input" type="file" style="display: none" onchange="setProfile(event)"/>
+            <img id="profile-image" width="200" height="200" src="/static/image/a.jpeg">
+        </div>
+
+        <!-- Spring Security 컨텍스트에서 현재 로그인한 사용자의 이름을 가져옵니다. -->
+        <div id="feed-info" style="flex: 1; text-align: center;">
+            <div id="header-title-login-user">
+                <span id="username" style="font-size: 23px;"></span>
+            </div>
+            <span id="post" style="font-size: medium">게시물</span>
+            <span id="post_count"></span><!--게시물 개수-->
+
+            <span id="followee" style="font-size: medium">팔로우</span>
+            <span id="followee_count"></span><!--팔로우 수-->
+
+            <span id="follower" style="font-size: medium">팔로워</span>
+            <span id="follower_count"></span><!--팔로워 수-->
+        </div>
     </div>
-
-    <span id="post" style="font-size: medium">게시물</span>
-    <span id="post_count"></span>
-
-    <span id="followee" style="font-size: medium">팔로우</span>
-    <span id="followee_count"></span>
-
-    <span id="follower" style="font-size: medium">팔로워</span>
-    <span id="follower_count"></span>
-
 </div>
+
 
 
 <div id="header-title-select-shop">
     <span th:text="username"></span>
 </div>
 
-<a id="login-text" href="javascript:logout()">
-    로그아웃
+
 </a>
 
-<!--/headr-->
+<!--/header-->
+
+
 </div>
 <div class="nav">
     <div class="nav-see active">
