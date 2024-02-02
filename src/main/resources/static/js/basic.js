@@ -161,9 +161,14 @@ function uploadProfile() {
 }
 
 function setProfile(event) {
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = e => {
+        $('#profile-image').attr('src', e.target.result);
+    };
+    reader.readAsDataURL(file);
 
-    const file = event.target.files[0]
-    const formData = new FormData();
+    let formData = new FormData();
     formData.append('file', file);
 
     $.ajax({
@@ -173,7 +178,7 @@ function setProfile(event) {
         contentType: false,
         processData: false,
         success: function (response) {
-            $('#profile-image').attr('src', response.profile);
+            console.log("Image uploaded successfully.");
         },
         error(error, status, request) {
             if (error.status === 403) {

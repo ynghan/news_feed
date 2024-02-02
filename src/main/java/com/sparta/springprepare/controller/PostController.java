@@ -32,11 +32,12 @@ public class PostController {
     }
 
     // 관심 게시물 조회하기
-    @GetMapping("posts")
+    @GetMapping("/posts")
     public List<PostResponseDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 응답 보내기
         return postService.getPosts(userDetails.getUser());
     }
+
     // 사용자 게시물 개수 조회하기
     @GetMapping("/post/count")
     public CountDto getPostCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
