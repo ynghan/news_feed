@@ -17,7 +17,7 @@
 <div id="login-form">
     <div id="login-title">Log into Select Shop</div>
     <br>
-    <button id="login-id-btn" onclick="location.href='/api/user/signup'">
+    <button id="login-id-btn" onclick="location.href='/api/page/user/signup'">
         회원 가입하기
     </button>
     <div>
@@ -66,11 +66,11 @@
                     jqXHR.setRequestHeader('Authorization', token);
                 });
 
-                window.location.href = host + '/posts'
+                window.location.href = host
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Login Fail");
-                window.location.href = host + '/api/user/login?error'
+                window.location.href = host + '/api/page/login?error'
             });
     }
 </script>

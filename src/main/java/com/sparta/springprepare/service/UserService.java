@@ -69,7 +69,7 @@ public class UserService {
 
     public ProfileDto postProfile(MultipartFile file, User user) {
         // 파일을 저장할 디렉토리 경로
-        String directory = "/Users/jeong-yeonghan/work/news_feed/spring-prepare/src/main/resources/static/image/ ";
+        String directory = "/Users/jeong-yeonghan/work/news_feed/spring-prepare/src/main/resources/static/image";
 
         // 파일의 원래 이름
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));

@@ -28,31 +28,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 로그인 페이지
-    @GetMapping("/login-page")
-    public String loginPage() {
-        return "login";
-    }
-    // 회원가입 페이지
-    @GetMapping("/signup")
-    public String signupPage() {
-        return "signup";
-    }
     // 회원가입
     @PostMapping("/signup")
     public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+        log.info(requestDto.getUsername());
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(!fieldErrors.isEmpty()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
-            return "redirect:/api/user/signup";
+            return "redirect:/api/page/user/signup";
         }
 
         userService.signup(requestDto);
 
-        return "redirect:/api/user/login-page";
+        return "redirect:/api/page/user/login";
     }
 
     // 회원 관련 정보 받기

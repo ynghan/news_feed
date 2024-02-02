@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script th:src="@{/js/basic.js}"></script>
+    <title>피드 게시판</title>
+</head>
+<body>
+<!--header-->
+
+<div class="header" style="position:relative; display: flex; justify-content: space-between;">
+    <div id="user-post-info" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+
+        <div id="user-profile" style="flex: 1; text-align: center;">
+            <button id="profile-button" onclick="uploadProfile()">업로드</button>
+            <input id="profile-input" type="file" style="display: none" onchange="setProfile(event)"/>
+            <img id="profile-image" width="200" height="200">
+        </div>
+
+        <!-- Spring Security 컨텍스트에서 현재 로그인한 사용자의 이름을 가져옵니다. -->
+        <div id="feed-info" style="flex: 1; text-align: center;">
+            <div id="header-title-login-user">
+                <span id="username" style="font-size: 23px;"></span>
+            </div>
+            <span id="post" style="font-size: medium">게시물</span>
+            <span id="post_count" style="font-size: 20px"></span><!--게시물 개수-->
+
+            <span id="followee" style="font-size: medium">팔로우</span>
+            <span id="followee_count" style="font-size: 20px"></span><!--팔로우 수-->
+
+            <span id="follower" style="font-size: medium">팔로워</span>
+            <span id="follower_count" style="font-size: 20px"></span><!--팔로워 수-->
+        </div>
+    </div>
+</div>
+<!--/header-->
+
+</body>
+</html>

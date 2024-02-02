@@ -21,7 +21,6 @@ public class PostController {
         this.postService = postService;
     }
 
-
     // 게시물 등록하기
     @PostMapping("/posts")
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {

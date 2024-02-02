@@ -1,6 +1,9 @@
 const host = 'http://' + window.location.host;
 let targetId;
 
+// 주로 DOM 요소에 이벤트 핸들러를 등록하거나,
+// 페이지 로딩이 완료된 직후에 실행해야 하는 초기화 코드를 작성하는 데 사용
+
 $(document).ready(function () {
     const auth = getToken();
 
@@ -9,50 +12,22 @@ $(document).ready(function () {
             jqXHR.setRequestHeader('Authorization', auth);
         });
     } else {
-        window.location.href = host + '/api/user/login';
+        window.location.href = host + '/api/page/user/login';
         return;
     }
 
-    // 게시물 수, 팔로우 수, 팔로워 수
+    getUserInfo();
     countPost();
     countFollowee();
     countFollower();
-
-    // 프로필 사진
     getProfile();
 
-    $.ajax({
-        type: 'GET',
-        url: `/api/user/info`,
-        contentType: 'application/json',
-    })
-        .done(function (res, status, xhr) {
-            const username = res.username;
-            const isAdmin = !!res.admin;
-
-            if (!username) {
-                window.location.href = '/api/user/login';
-                return;
-            }
-
-            $('#username').text(username);
-            if (isAdmin) {
-                $('#admin').text(true);
-                showPost(true);
-            } else {
-                showPost();
-            }
-        })
-        .fail(function (jqXHR, textStatus) {
-            logout();
-        });
-
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
-    $('#query').on('keypress', function (e) {
-        if (e.key == 'Enter') {
-            execSearch();
-        }
-    });
+    // $('#query').on('keypress', function (e) {
+    //     if (e.key == 'Enter') {
+    //         execSearch();
+    //     }
+    // });
     $('#close').on('click', function () {
         $('#container').removeClass('active');
     })
@@ -89,6 +64,34 @@ $.ajax({
     }
 });
 
+
+function getUserInfo() {
+    $.ajax({
+        type: 'GET',
+        url: `/api/user/info`,
+        contentType: 'application/json',
+    })
+        .done(function (res, status, xhr) {
+            const username = res.username;
+            const isAdmin = !!res.admin;
+
+            if (!username) {
+                window.location.href = '/api/page/user/login';
+                return;
+            }
+
+            $('#username').text(username);
+            if (isAdmin) {
+                $('#admin').text(true);
+                showPost(true);
+            } else {
+                showPost();
+            }
+        })
+        .fail(function (jqXHR, textStatus) {
+            logout();
+        });
+}
 
 function countPost() {
 

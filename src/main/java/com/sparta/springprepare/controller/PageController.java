@@ -6,37 +6,36 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/api/page")
 public class PageController {
 
-//    @GetMapping("/")
-//    public String home(Model model) {
-//        // 페이지 동적 처리 : 사용자 이름
-//        model.addAttribute("username", "username");
-//        return "index";
-//    }
-
-//    @GetMapping("/")
-//    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        // 페이지 동적 처리 : 사용자 이름
-//        model.addAttribute("username", userDetails.getUser().getUsername());
-//        return "index";
-//    }
-
-    @GetMapping("/")
-    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // 페이지 동적 처리 : 사용자 이름
-        String username = (userDetails != null && userDetails.getUser() != null) ? userDetails.getUser().getUsername() : "Guest";
-        model.addAttribute("username", username);
-        return "index";
+    // 로그인 페이지
+    @GetMapping("/user/login")
+    public String loginPage() {
+        return "login";
+    }
+    // 회원가입 페이지
+    @GetMapping("/user/signup")
+    public String signupPage() {
+        return "signup";
     }
 
-    @GetMapping("/posts")
-    public String posts(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // 페이지 동적 처리 : 사용자 이름, 게시물 개수, 팔로우 수, 팔로워 수, 게시물
+    // 게시판 페이지
+    @GetMapping("/feed")
+    public String feedPage() {
+        return "feed";
+    }
+
+    // 게시물 작성 페이지
+    @GetMapping("/posting")
+    public String createPost(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = (userDetails != null && userDetails.getUser() != null) ? userDetails.getUser().getUsername() : "Guest";
         model.addAttribute("username", username);
-        return "post";
+        return "posting";
     }
+
+
 }
