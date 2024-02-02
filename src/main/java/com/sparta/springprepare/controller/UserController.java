@@ -2,10 +2,7 @@ package com.sparta.springprepare.controller;
 
 
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.CountDto;
-import com.sparta.springprepare.dto.ProfileDto;
-import com.sparta.springprepare.dto.SignupRequestDto;
-import com.sparta.springprepare.dto.UserInfoDto;
+import com.sparta.springprepare.dto.*;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.UserService;
 import jakarta.validation.Valid;
@@ -17,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -80,11 +78,13 @@ public class UserController {
         return userService.getFollowerCount(userDetails.getUser());
     }
 
-//    @GetMapping("/profile")
-//    @ResponseBody
-//    public ProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return userService.getProfile(userDetails.getUser());
-//    }
+    @GetMapping("/profile")
+    @ResponseBody
+    public ProfileEncodingDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        ProfileEncodingDto profile = userService.getProfile(userDetails.getUser());
+        log.info("Profile: {}", profile.getProfile());  // 로깅 추가
+        return profile;
+    }
 
     @PostMapping("/profile")
     @ResponseBody

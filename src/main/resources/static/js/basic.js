@@ -19,7 +19,7 @@ $(document).ready(function () {
     countFollower();
 
     // 프로필 사진
-
+    getProfile();
 
     $.ajax({
         type: 'GET',
@@ -158,6 +158,24 @@ function countFollower() {
 
 function uploadProfile() {
     $('#profile-input').click();
+}
+
+function getProfile() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/user/profile',
+        success: function (response) {
+            let imageData = response.profile;
+            $('#profile-image').attr('src', 'data:image/png;base64,' + imageData);
+        },
+        error(error, status, request) {
+            if (error.status === 403) {
+                $('html').html(error.responseText);
+                return;
+            }
+            logout();
+        }
+    });
 }
 
 function setProfile(event) {

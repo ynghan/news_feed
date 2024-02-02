@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -32,11 +30,11 @@ public class PostController {
     }
 
     // 관심 게시물 조회하기
-    @GetMapping("/posts")
-    public List<PostResponseDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // 응답 보내기
-        return postService.getPosts(userDetails.getUser());
-    }
+//    @GetMapping("/posts")
+//    public List<PostResponseDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        // 응답 보내기
+//        return postService.getPosts(userDetails.getUser());
+//    }
 
     // 사용자 게시물 개수 조회하기
     @GetMapping("/post/count")

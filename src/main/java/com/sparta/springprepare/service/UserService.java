@@ -5,9 +5,11 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.dto.CountDto;
 import com.sparta.springprepare.dto.ProfileDto;
+import com.sparta.springprepare.dto.ProfileEncodingDto;
 import com.sparta.springprepare.dto.SignupRequestDto;
 import com.sparta.springprepare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,10 +112,14 @@ public class UserService {
         return new CountDto(count);
     }
 
-//    public ProfileDto getProfile(User user) {
-//        Optional<User> findUser = userRepository.findByUsername(user.getUsername());
-//        String profile = findUser.get().getProfile();
-//        return new ProfileDto(profile);
-//    }
+    public ProfileEncodingDto getProfile(User user) throws IOException {
+        String profile = user.getProfile();
+        Path path = Paths.get(profile);
+
+        byte[] imageBytes = Files.readAllBytes(path);
+        String imageBase64 = Base64.encodeBase64String(imageBytes);
+
+        return new ProfileEncodingDto(imageBase64);
+    }
 
 }
