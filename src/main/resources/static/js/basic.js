@@ -21,6 +21,9 @@ $(document).ready(function () {
     countFollowee();
     countFollower();
     getProfile();
+    loadPosts();
+    goToFeed();
+    getIntroduceMyself();
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
     // $('#query').on('keypress', function (e) {
@@ -181,6 +184,8 @@ function getProfile() {
     });
 }
 
+
+
 function setProfile(event) {
     let file = event.target.files[0];
     let reader = new FileReader();
@@ -211,6 +216,106 @@ function setProfile(event) {
     });
 }
 
+function goToUserInfo() {
+    // 프로필 수정 버튼
+    $("#user-info").click(function(){
+        window.location.href ='/api/page/user/info';
+    });
+}
+// 게시물 업로드 하기
+
+function uploadPost() {
+    var formData = new FormData();
+    formData.append('title', $('#post-title').val());
+    formData.append('content', $('#post-content').val());
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/posts',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log("Post uploaded successfully.");
+            // 게시글 업로드에 성공한 후에는, GET 요청을 통해 게시글 목록을 다시 불러옵니다.
+            $('#postModal').modal('hide');
+            loadPosts();
+        },
+        error: function(error, status, request) {
+            if (error.status === 403) {
+                $('html').html(error.responseText);
+                return;
+            }
+            logout();
+        }
+    });
+}
+
+
+function loadPosts() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/posts',
+        success: function (response) {
+            // 받아온 게시글 데이터를 화면에 표시합니다.
+            $('.body').empty();  // 기존에 표시된 게시글을 모두 지웁니다.
+            $.each(response, function(index, post) {
+                $('.body').prepend(`
+                    <div class="post" style="border: 1px solid black; padding: 10px; width: 200px; height: 200px; overflow: auto;">
+                        <p>${post.content}</p>
+                    </div>
+                `);
+            });
+        },
+        error: function(error, status, request) {
+            if (error.status === 403) {
+                $('html').html(error.responseText);
+                return;
+            }
+            logout();
+        }
+    });
+}
+
+function goToFeed() {
+    // 내 게시판 보기 버튼
+    $("#user-ok").click(function(){
+        window.location.href = host + '/api/page/feed';
+    });
+}
+function updateIntroduceMyself() {
+    var introduceMyself = document.getElementById('introduce-myself').value;
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/user/info/introduce',
+        data: {
+            introduce: introduceMyself
+        },
+        success: function(response) {
+            console.log('Introduce myself updated successfully.');
+        },
+        error: function(error) {
+            console.log('Failed to update introduce myself:', error);
+        }
+    });
+}
+function getIntroduceMyself() {
+    $.ajax({
+        type: 'GET',
+        url: `/api/user/info/introduce`,
+        contentType: 'application/json',
+    })
+        .done(function (res) {
+            const introduce = res.introduce;
+
+            $('#user-introduce').text(introduce);
+
+        })
+        .fail(function (jqXHR, textStatus) {
+            logout();
+        });
+}
 function logout() {
     // 토큰 삭제
     Cookies.remove('Authorization', {path: '/'});

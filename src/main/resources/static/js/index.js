@@ -25,3 +25,19 @@ function goToFeed() {
         window.location.href ='/api/page/feed';
     });
 }
+
+function logout() {
+    // 토큰 삭제
+    Cookies.remove('Authorization', {path: '/'});
+    window.location.href = host + '/api/user/logout';
+}
+
+function getToken() {
+    let auth = Cookies.get('Authorization');
+
+    if (auth === undefined) {
+        return '';
+    }
+
+    return auth;
+}

@@ -3,10 +3,7 @@ package com.sparta.springprepare.service;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.CountDto;
-import com.sparta.springprepare.dto.ProfileDto;
-import com.sparta.springprepare.dto.ProfileEncodingDto;
-import com.sparta.springprepare.dto.SignupRequestDto;
+import com.sparta.springprepare.dto.*;
 import com.sparta.springprepare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -69,7 +66,7 @@ public class UserService {
 
     public ProfileDto postProfile(MultipartFile file, User user) {
         // 파일을 저장할 디렉토리 경로
-        String directory = "/Users/jeong-yeonghan/work/news_feed/spring-prepare/src/main/resources/static/image";
+        String directory = "/Users/jeong-yeonghan/work/news_feed/spring-prepare/src/main/resources/static/image/";
 
         // 파일의 원래 이름
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
@@ -122,4 +119,25 @@ public class UserService {
         return new ProfileEncodingDto(imageBase64);
     }
 
+    public UserInfoDto getUserInfo(User user) {
+        String username = user.getUsername();
+        UserRoleEnum role = user.getRole();
+
+        return new UserInfoDto(username, role);
+    }
+
+    public void postUserInfo(UserInfoDto dto, User user) {
+        User findUser = userRepository.findByUsername(user.getUsername()).get();
+        findUser.setUsername(dto.getUsername());
+        findUser.setRole(dto.getRole());
+        userRepository.save(findUser);
+    }
+    public UserIntroduceDto getUserIntroduce(User user) {
+        return new UserIntroduceDto(user.getIntroduce());
+    }
+    public void postUserIntroduce(String introduce, User user) {
+        User findUser = userRepository.findByUsername(user.getUsername()).get();
+        findUser.setIntroduce(introduce);
+        userRepository.save(findUser);
+    }
 }

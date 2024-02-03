@@ -28,8 +28,10 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    // 프로필 사진
     private String profile;
 
+    // 한줄 소개
     private String introduce;
 
     // 인적 정보

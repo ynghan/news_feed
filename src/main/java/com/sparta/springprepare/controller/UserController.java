@@ -1,7 +1,7 @@
 package com.sparta.springprepare.controller;
 
 
-import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.*;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.UserService;
@@ -50,13 +50,26 @@ public class UserController {
     @GetMapping("/info")
     @ResponseBody
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUser().getUsername();
-        UserRoleEnum role = userDetails.getUser().getRole();
-        boolean isAdmin = (role == UserRoleEnum.ADMIN);
-
-        return new UserInfoDto(username, isAdmin);
+        return userService.getUserInfo(userDetails.getUser());
     }
 
+    @PostMapping("/info")
+    @ResponseBody
+    public void postUserInfo(UserInfoDto userInfoDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        userService.postUserInfo(userInfoDto, user);
+    }
+    @PostMapping("/info/introduce")
+    @ResponseBody
+    public void postUserIntroduce(@RequestParam("introduce") String introduce, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        userService.postUserIntroduce(introduce, user);
+    }
+    @GetMapping("/info/introduce")
+    @ResponseBody
+    public UserIntroduceDto getUserIntroduce(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getUserIntroduce(userDetails.getUser());
+    }
     @GetMapping("/followee/count")
     @ResponseBody
     public CountDto getUserFolloweeCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {

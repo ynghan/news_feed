@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/basic.js}"></script>
+    <title>피드 게시판</title>
+</head>
+<body>
+    <!-- 사용자 프로필 정보 -->
+    <div id="user-profile" style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: start;">
+        <!-- 이미지 수정 모달 -->
+        <div class="user-image">
+            <span>사진 변경 : </span>
+            <!-- 이미지 수정 버튼 -->
+            <button id="profile-button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">수정</button>
+            <!-- 이미지 -->
+            <img id="profile-image" width="200" height="200">
+            <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">파일 업로드</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input id="profile-input" type="file" onchange="setProfile(event)"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 사용자 정보 -->
+        <div class="user-info" style="display: flex; justify-content: center;">
+            <!-- 한 줄 소개 -->
+            <label for="introduce-myself" style="margin-right: 5px;">소개 : </label>
+            <textarea class="form-control" id="introduce-myself" rows="1" placeholder="내용을 입력하세요." style="width: 300px; height: 100px;"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="updateIntroduceMyself()">수정</button>
+
+        <div id="user-post">
+            <span>게시물 업로드 : </span>
+            <!-- 게시글 업로드 버튼 -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#postModal">게시글 업로드</button>
+            <!-- 게시글 업로드 모달 -->
+            <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">게시글 업로드</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="post-form">
+                                <div class="form-group">
+                                    <label for="post-title">제목</label>
+                                    <input type="text" class="form-control" id="post-title" placeholder="제목을 입력하세요.">
+                                </div>
+                                <div class="form-group">
+                                    <label for="post-content">내용</label>
+                                    <textarea class="form-control" id="post-content" rows="3" placeholder="내용을 입력하세요."></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="uploadPost()">확인</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="user-ok" type="button" class="btn btn-primary" onclick="goToFeed()">확인</button>
+    </div>
+</body>
+</html>

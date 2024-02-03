@@ -37,5 +37,10 @@ public class PageController {
         return "posting";
     }
 
+    @GetMapping("/user/info")
+    public String getUserInfo() {
+        return "user-info";
+    }
+
 
 }
