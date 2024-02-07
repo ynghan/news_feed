@@ -1,6 +1,7 @@
 package com.sparta.springprepare.domain;
 
-import com.sparta.springprepare.dto.UserRequestDto;
+import com.sparta.springprepare.dto.userDto.UserInfoDto;
+import com.sparta.springprepare.dto.userDto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -86,9 +87,17 @@ public class User {
         this.profile = profile;
     }
 
-    public void update(UserRequestDto requestDto) {
-        this.username = requestDto.getUsername();
-        this.password = requestDto.getPassword();
+    public void patch(UserInfoDto dto) {
+        // 예외 발생
+        if (dto.getUsername() != null)
+            this.username = dto.getUsername();
+        // 객체를 갱신
+        if (dto.getNickname() != null)
+            this.nickname = dto.getNickname();
+        if (dto.getIntroduce() != null)
+            this.introduce = dto.getIntroduce();
+        if (dto.getRole() != null)
+            this.role = dto.getRole();
     }
 
 }

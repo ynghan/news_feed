@@ -3,7 +3,7 @@ package com.sparta.springprepare.service;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.*;
+import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -120,24 +120,26 @@ public class UserService {
     }
 
     public UserInfoDto getUserInfo(User user) {
-        String username = user.getUsername();
-        UserRoleEnum role = user.getRole();
-
-        return new UserInfoDto(username, role);
+        User findUser = userRepository.findByUsername(user.getUsername()).orElse(null);
+        if(findUser != null) {
+            return new UserInfoDto(findUser.getUsername(), findUser.getRole(), findUser.getIntroduce(), findUser.getNickname());
+        }
+        return null;
     }
 
-    public void postUserInfo(UserInfoDto dto, User user) {
+    public UserInfoDto postUserInfo(UserInfoDto dto, User user) {
         User findUser = userRepository.findByUsername(user.getUsername()).get();
-        findUser.setUsername(dto.getUsername());
-        findUser.setRole(dto.getRole());
+        findUser.patch(dto);
         userRepository.save(findUser);
+        return new UserInfoDto(findUser);
     }
     public UserIntroduceDto getUserIntroduce(User user) {
         return new UserIntroduceDto(user.getIntroduce());
     }
-    public void postUserIntroduce(String introduce, User user) {
-        User findUser = userRepository.findByUsername(user.getUsername()).get();
-        findUser.setIntroduce(introduce);
-        userRepository.save(findUser);
+
+    public UserInfoDto postUserIntroduce(UserInfoDto dto, User user) {
+        User findUser = userRepository.findById(user.getId()).get();
+        findUser.patch(dto);
+        return new UserInfoDto(findUser);
     }
 }

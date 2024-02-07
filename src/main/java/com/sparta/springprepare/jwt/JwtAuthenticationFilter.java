@@ -3,7 +3,7 @@ package com.sparta.springprepare.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.LoginRequestDto;
+import com.sparta.springprepare.dto.userDto.LoginRequestDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

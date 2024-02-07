@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                 formLogin
                         // 로그인 View 제공 (GET /api/user/login-page)
                         .loginPage("/api/page/user/login").permitAll()
+                        .defaultSuccessUrl("/")
         );
 
         // 필터 관리

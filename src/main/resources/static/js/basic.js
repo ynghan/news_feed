@@ -83,13 +83,6 @@ function getUserInfo() {
                 return;
             }
 
-            $('#username').text(username);
-            if (isAdmin) {
-                $('#admin').text(true);
-                showPost(true);
-            } else {
-                showPost();
-            }
         })
         .fail(function (jqXHR, textStatus) {
             logout();
