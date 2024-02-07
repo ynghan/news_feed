@@ -2,8 +2,8 @@ package com.sparta.springprepare.controller;
 
 
 import com.sparta.springprepare.dto.userDto.CountDto;
-import com.sparta.springprepare.dto.PostRequestDto;
-import com.sparta.springprepare.dto.PostResponseDto;
+import com.sparta.springprepare.dto.postDto.PostRequestDto;
+import com.sparta.springprepare.dto.postDto.PostResponseDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.PostService;
 import lombok.extern.slf4j.Slf4j;
