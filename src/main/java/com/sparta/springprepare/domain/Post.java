@@ -1,6 +1,5 @@
 package com.sparta.springprepare.domain;
 
-import com.sparta.springprepare.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +34,5 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-
-    public Post(PostRequestDto requestDto, User user) {
-        this.content = requestDto.getContent();
-        this.user = user;
-    }
 
 }

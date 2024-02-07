@@ -25,9 +25,9 @@ public class PostController {
 
     // 로그인 사용자 게시물 등록하기
     @PostMapping("/posts")
-    public PostResponseDto createPost(PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 응답 보내기
-        return postService.createPost(requestDto, userDetails.getUser());
+        return postService.createPost(requestDto, userDetails.getUser().getId());
     }
 
     // 로그인 사용자 게시물 조회하기
@@ -37,7 +37,14 @@ public class PostController {
         return postService.getPosts(userDetails.getUser());
     }
 
-    // 사용자 게시물 개수 조회하기
+    // 특정 사용자 게시물 조회하기
+    @GetMapping("/{userId}/posts")
+    public List<PostResponseDto> getUserPosts(@PathVariable(name="userId") Long userId) {
+
+        return postService.getUserPosts(userId);
+    }
+
+    // 로그인 사용자의 "게시물 개수" 조회하기
     @GetMapping("/post/count")
     public CountDto getPostCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPostCount(userDetails.getUser());
