@@ -38,6 +38,9 @@ dependencies {
     //Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    // .ENV 파일
+    implementation("io.github.cdimascio:java-dotenv:5.2.2")
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
