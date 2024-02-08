@@ -6,8 +6,7 @@ build/
 !**/src/test/**/build/
 
 
-/src/main/resources/application.yml
-
+>>>>>>> c8d3a6d0dc01ac92d0bc1f91bdde12df9da03147
 ### STS ###
 .apt_generated
 .classpath
