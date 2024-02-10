@@ -32,6 +32,9 @@ public class User {
     // 프로필 사진
     private String profile;
 
+    // aws s3 이미지 url
+    private String photoImage;
+
     // 한줄 소개
     private String introduce;
 

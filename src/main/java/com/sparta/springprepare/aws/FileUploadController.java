@@ -2,11 +2,17 @@ package com.sparta.springprepare.aws;
 
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sparta.springprepare.dto.PhotoDto;
+import com.sparta.springprepare.security.UserDetailsImpl;
+import com.sparta.springprepare.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +27,13 @@ import java.nio.charset.StandardCharsets;
 public class FileUploadController {
 
     private final AmazonS3Client amazonS3Client;
+    private final UserService userService;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     @PostMapping("/aws/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<PhotoDto> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             String folderName = URLEncoder.encode("이미지 폴더", StandardCharsets.UTF_8);
             String fileName = file.getOriginalFilename();
@@ -34,9 +41,12 @@ public class FileUploadController {
             ObjectMetadata metaData = new ObjectMetadata();
             metaData.setContentType(file.getContentType());
             metaData.setContentLength(file.getSize());
-            amazonS3Client.putObject(bucket, "이미지 폴더/" + fileName, file.getInputStream(), metaData);
+            amazonS3Client.putObject(new PutObjectRequest(bucket, "이미지 폴더/" + fileName, file.getInputStream(), metaData)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            // 사용자 이미지 url 저장
+            PhotoDto photoDto = userService.postPhoto(fileUrl, userDetails.getUser());
 
-            return ResponseEntity.ok(fileUrl);
+            return ResponseEntity.ok(photoDto);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

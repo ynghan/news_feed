@@ -3,6 +3,7 @@ package com.sparta.springprepare.service;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.dto.PhotoDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -141,5 +143,27 @@ public class UserService {
         User findUser = userRepository.findById(user.getId()).get();
         findUser.patch(dto);
         return new UserInfoDto(findUser);
+    }
+
+    public ProfileDto getPhotoUrl(String username) {
+        User findUser = userRepository.findByUsername(username).get();
+        String photoImage = findUser.getPhotoImage();
+        return new ProfileDto(photoImage);
+    }
+
+    public PhotoDto postPhoto(String photoUrl, User user) {
+        User findUser = userRepository.findByUsername(user.getUsername()).get();
+        findUser.setPhotoImage(photoUrl);
+        User savedUser = userRepository.save(findUser);
+        return new PhotoDto(savedUser);
+    }
+
+    public List<UserInfoDto> findAllUsers() {
+        List<User> findUsers = userRepository.findAll();
+        ArrayList<UserInfoDto> dtoList = new ArrayList<>();
+        for (User findUser : findUsers) {
+            dtoList.add(new UserInfoDto(findUser));
+        }
+        return dtoList;
     }
 }

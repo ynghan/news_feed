@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Follow {
 
@@ -20,14 +22,19 @@ public class Follow {
      * 연관 관계 매핑
      * Follow : User = N : 1
      */
-    // 내가 팔로우 한 사람
+
+    // 팔로우 신청한 사람
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "follower_id") // 외래키로 동작, name : 외래키의 컬럼명을 지정함
     private User follower;
 
-    // 나를 팔로우 한 사람
+    // 팔로우 신청받은 사람
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "followee_id")
     private User followee;
 
+    public Follow(User loginUser, User findFollowUser) {
+        this.follower = findFollowUser; // 팔로우되는 사람
+        this.followee = loginUser; // 팔로우 신청하는 사람
+    }
 }

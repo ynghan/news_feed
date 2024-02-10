@@ -177,6 +177,27 @@ function getProfile() {
     });
 }
 
+function getPhoto() {
+
+    let username = "ynghan56";
+
+    $.ajax({
+        type: 'GET',
+        url: '/api/user/${username}/image',
+        success: function (response) {
+            let imageUrl = response.profile;
+            $('#profile-image').attr('src', imageUrl);
+        },
+        error(error, status, request) {
+            if (error.status === 403) {
+                $('html').html(error.responseText);
+                return;
+            }
+            logout();
+        }
+    });
+}
+
 
 
 function setProfile(event) {

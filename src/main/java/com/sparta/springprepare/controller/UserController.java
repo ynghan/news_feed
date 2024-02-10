@@ -99,6 +99,21 @@ public class UserController {
         return userService.postProfile(file, userDetails.getUser());
     }
 
+
+    //이미지 조회
+    @GetMapping("/{username}/image")
+    @ResponseBody
+    public ProfileDto getUserPhotoUrl(@PathVariable(name="username") String username) {
+        return userService.getPhotoUrl(username);
+    }
+
+
+    @GetMapping
+    @ResponseBody
+    public List<UserInfoDto> getAllUsers() {
+        return userService.findAllUsers();
+    }
+
     //    @PostMapping("/password")
 //    public PasswordDto changePassword(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 //        User user = userDetails.getUser();
