@@ -43,12 +43,13 @@ public class CommentLikeController {
 
     // 로그인 사용자가 남긴 좋아요를 취소할 수 있어야 한다.
     @DeleteMapping("/api/like/comment/{commentId}")
-    public void deleteLikeToComment(@PathVariable(name="commentId") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public CommentLikeDto deleteLikeToComment(@PathVariable(name="commentId") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         CommentLike findCommentLike = commentLikeRepository.findAll().stream().filter(cl -> cl.getComment().getId().equals(commentId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("좋아요를 누른 댓글이 없습니다."));
 
         commentLikeRepository.delete(findCommentLike);
+        return new CommentLikeDto(findCommentLike);
     }
 
 }

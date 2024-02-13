@@ -37,11 +37,10 @@ public class PostController {
         return postService.getPosts(userDetails.getUser());
     }
 
-    // 특정 사용자 게시물 조회하기
-    @GetMapping("/{userId}/posts")
-    public List<PostResponseDto> getUserPosts(@PathVariable(name="userId") Long userId) {
-
-        return postService.getUserPosts(userId);
+    // 특정 사용자 게시물 조회하기 -> 조회 권한 체크 하기
+    @GetMapping("/{followUsername}/posts")
+    public List<PostResponseDto> getUserPosts(@PathVariable(name="followUsername") String followUsername, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getUserPosts(followUsername, userDetails.getUser());
     }
 
     // 로그인 사용자의 "게시물 개수" 조회하기

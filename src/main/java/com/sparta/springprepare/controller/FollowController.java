@@ -40,10 +40,10 @@ public class FollowController {
     // 로그인 사용자의 "팔로위" 목록 조회
     @GetMapping("/api/followee")
     public List<FollowDto> findFolloweeListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return followService.findFolloweeListOfUser(userDetails.getUsername());
+        return followService.findFolloweeListOfUser(userDetails.getUser().getUsername());
     }
 
-    // 로그인 사용자가 특정 사용자(username)를 팔로우
+    // 로그인 사용자가 특정 사용자(username)를 팔로우 -> 게시물의 조회 권한을 얻을 수 있다.
     @PostMapping("/api/{username}/follow")
     public FollowDto addFollower(@PathVariable(name="username") String followUsername, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return followService.addFollower(followUsername, userDetails.getUser());

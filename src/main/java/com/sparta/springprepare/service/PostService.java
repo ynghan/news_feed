@@ -1,14 +1,16 @@
 package com.sparta.springprepare.service;
 
 
+import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.domain.User;
-import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.dto.postDto.PostRequestDto;
 import com.sparta.springprepare.dto.postDto.PostResponseDto;
+import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.repository.PostRepository;
 import com.sparta.springprepare.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +47,17 @@ public class PostService {
         return responseDtoList;
     }
 
-    public List<PostResponseDto> getUserPosts(Long userId) {
-        User findUser = userRepository.findById(userId).get();
-        List<Post> postList = postRepository.findAllByUser(findUser);
+    // 조회할 사용자가 로그인 사용자가 팔로우한 사용자 목록에 포함되어 있어야 사용자의 게시물을 조회할 수 있다.
+    @Transactional
+    public List<PostResponseDto> getUserPosts(String followUsername, User loginUser) {
+        Long findUserId = userRepository.findByUsername(followUsername).orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다.")).getId();
+        loginUser = userRepository.findById(loginUser.getId()).get();
+
+        Follow findFollowEntity = loginUser.getFollowers()
+                .stream().filter(follow -> follow.getFollowee().getId().equals(findUserId))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 팔로우한 사용자가 아닙니다."));
+
+        List<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee());
         ArrayList<PostResponseDto> responseDtoList = new ArrayList<>();
         for (Post post : postList) {
             responseDtoList.add(new PostResponseDto(post));

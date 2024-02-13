@@ -25,12 +25,12 @@ public class FollowService {
 
     // 특정 사용자의 팔로우 리스트 조회하기
     public List<FollowDto> findFollowListOfUser(String username) {
-        User targetUser = userRepository.findByUsername(username).get();
-        List<Follow> findFollowEntities = targetUser.getFollowers();
+
+        List<Follow> findFollowerEntities = userRepository.findWithFollowersByUsername(username);
         ArrayList<FollowDto> dtoList = new ArrayList<>();
 
-        for (Follow findFollowEntity : findFollowEntities) {
-            User followee = findFollowEntity.getFollowee();
+        for (Follow findFollowerEntity : findFollowerEntities) {
+            User followee = findFollowerEntity.getFollowee();
             dtoList.add(new FollowDto(followee));
         }
         return dtoList;
@@ -38,8 +38,7 @@ public class FollowService {
 
     // 특정 사용자의 팔로위 리스트 조회하기
     public List<FollowDto> findFolloweeListOfUser(String username) {
-        User targetUser = userRepository.findByUsername(username).get();
-        List<Follow> findFolloweeEntities = targetUser.getFollowees();
+        List<Follow> findFolloweeEntities = userRepository.findWithFolloweesByUsername(username);
         ArrayList<FollowDto> dtoList = new ArrayList<>();
 
         for (Follow findFollowEntity : findFolloweeEntities) {

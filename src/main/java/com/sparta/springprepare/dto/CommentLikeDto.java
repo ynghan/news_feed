@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CommentLikeDto {
 
-    private Long postId;
+    private Long commentId;
     private Long userId;
 
     public CommentLikeDto(CommentLike commentLike) {
-        this.postId = commentLike.getComment().getId();
+        this.commentId = commentLike.getComment().getId();
         this.userId = commentLike.getUser().getId();
     }
 

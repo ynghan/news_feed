@@ -30,7 +30,7 @@ public class PostLikeController {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
-        if(findPost.getUser().equals(userDetails.getUser())) {
+        if(findPost.getUser().getId().equals(userDetails.getUser().getId())) {
             throw new IllegalArgumentException("자신의 게시물에는 좋아요를 누를 수 없습니다.");
         }
 
@@ -41,12 +41,12 @@ public class PostLikeController {
 
     // 로그인 사용자는 특정 게시물에 좋아요를 취소할 수 있어야 한다.
     @DeleteMapping("/api/like/post/{postId}")
-    public void deleteLikeToPost(@PathVariable(name="postId") Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public PostLikeDto deleteLikeToPost(@PathVariable(name="postId") Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         PostLike findPostLike = postLikeRepository.findAll().stream().filter(pl -> pl.getPost().getId().equals(postId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("좋아요를 누른 게시물이 없습니다."));
         postLikeRepository.delete(findPostLike);
-
+        return new PostLikeDto(findPostLike);
     }
 
 }
