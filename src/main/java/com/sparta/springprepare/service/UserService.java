@@ -35,8 +35,18 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원가입
+    // username은 최소 4자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성되어야 한다.
+    // password는  최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 한다.
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
+        // username 검증
+
+        // password 검증
+        int passLength = requestDto.getPassword().length();
+
+        if( passLength >= 8 && passLength <= 15 ) {
+
+        }
         String password = passwordEncoder.encode(requestDto.getPassword());
 
         // 회원 중복 확인
@@ -135,6 +145,7 @@ public class UserService {
         userRepository.save(findUser);
         return new UserInfoDto(findUser);
     }
+
     public UserIntroduceDto getUserIntroduce(User user) {
         return new UserIntroduceDto(user.getIntroduce());
     }

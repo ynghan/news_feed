@@ -29,8 +29,9 @@ public class UserController {
     }
 
     // 회원가입
+    // 비밀번호는  최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 한다.
     @PostMapping("/signup")
-    public String signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
+    public String signup(final @Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         log.info(requestDto.getUsername());
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -45,46 +46,46 @@ public class UserController {
 
         return "redirect:/api/page/user/login";
     }
-    // 회원 정보 불러오기
+    // 로그인 사용자 회원 정보 불러오기
     @GetMapping("/info")
     @ResponseBody
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return userService.getUserInfo(userDetails.getUser());
     }
-    // 회원 정보 수정하기
+    // 로그인 사용자 회원 정보 수정하기
     @PostMapping("/info")
     @ResponseBody
     public UserInfoDto postUserInfo(@RequestBody UserInfoDto userInfoDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return userService.postUserInfo(userInfoDto, user);
     }
-    // 로그인 회원 한줄 소개 불러오기
+    // 로그인 사용자 한줄 소개 불러오기
     @GetMapping("/info/introduce")
     @ResponseBody
     public UserIntroduceDto getUserIntroduce(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getUserIntroduce(userDetails.getUser());
     }
-    // 로그인 회원 한줄 소개 수정하기
+    // 로그인 사용자 한줄 소개 수정하기
     @PostMapping("/info/introduce")
     @ResponseBody
     public UserInfoDto postUserIntroduce(@RequestBody UserInfoDto dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return userService.postUserIntroduce(dto, user);
     }
-    // 로그인 회원을 팔로우한 사람 수 불러오기
+    // 로그인 사용자의 팔로우한 사람 수 불러오기
     @GetMapping("/followee/count")
     @ResponseBody
     public CountDto getUserFolloweeCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getFolloweeCount(userDetails.getUser());
     }
-    // 로그인 회원이 팔로우한 사람 수 불러오기
+    // 로그인 사용자의 팔로우한 사람 수 불러오기
     @GetMapping("/follower/count")
     @ResponseBody
     public CountDto getUserFollowerCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getFollowerCount(userDetails.getUser());
     }
-    // 로그인 회원 프로필 사진 불러오기
+    // 로그인 사용자 프로필 사진 불러오기
     @GetMapping("/profile")
     @ResponseBody
     public ProfileEncodingDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -92,7 +93,7 @@ public class UserController {
         log.info("Profile: {}", profile.getProfile());  // 로깅 추가
         return profile;
     }
-    // 로그인 회원 프로필 사진 등록하기
+    // 로그인 사용자 프로필 사진 등록하기
     @PostMapping("/profile")
     @ResponseBody
     public ProfileDto postProfile(@RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
