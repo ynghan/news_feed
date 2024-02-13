@@ -44,6 +44,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+
+
     @Column(nullable = false, unique = true)
     private String email;
     private String nickname;
@@ -76,6 +78,9 @@ public class User {
 
     @OneToMany(mappedBy = "followee")
     private List<Follow> followees = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<PasswordHistory> passHis = new ArrayList<>();
 
 
     //Dto 매핑

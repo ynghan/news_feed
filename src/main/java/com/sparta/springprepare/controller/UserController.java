@@ -2,6 +2,7 @@ package com.sparta.springprepare.controller;
 
 
 import com.sparta.springprepare.domain.User;
+import com.sparta.springprepare.dto.PasswordDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.UserService;
@@ -29,7 +30,6 @@ public class UserController {
     }
 
     // 회원가입
-    // 비밀번호는  최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 한다.
     @PostMapping("/signup")
     public String signup(final @Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         log.info(requestDto.getUsername());
@@ -115,10 +115,11 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    //    @PostMapping("/password")
-//    public PasswordDto changePassword(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        User user = userDetails.getUser();
-//        userService.changePassword()
-//    }
+    // 비밀번호 업데이트
+    @PostMapping("/password")
+    public UserResponseDto changePassword(@RequestBody @Valid PasswordDto dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User loginUser = userDetails.getUser();
+        return userService.changePassword(dto, loginUser);
+    }
 }
 

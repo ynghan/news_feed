@@ -1,10 +1,13 @@
 package com.sparta.springprepare.service;
 
 import com.sparta.springprepare.domain.Follow;
+import com.sparta.springprepare.domain.PasswordHistory;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.dto.PasswordDto;
 import com.sparta.springprepare.dto.PhotoDto;
 import com.sparta.springprepare.dto.userDto.*;
+import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -18,10 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,24 +29,15 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordHistoryRepository passwordHistoryRepository;
     private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원가입
-    // username은 최소 4자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성되어야 한다.
-    // password는  최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 한다.
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
-        // username 검증
-
-        // password 검증
-        int passLength = requestDto.getPassword().length();
-
-        if( passLength >= 8 && passLength <= 15 ) {
-
-        }
         String password = passwordEncoder.encode(requestDto.getPassword());
 
         // 회원 중복 확인
@@ -176,5 +167,58 @@ public class UserService {
             dtoList.add(new UserInfoDto(findUser));
         }
         return dtoList;
+    }
+
+    /**
+     * 1. 비밀번호 중복 확인
+     * 2. 확인 후, PasswordHistory 엔티티로 생성
+     * 비밀번호 변경 시,
+        * 3. 기존의 비밀번호를 새로 생성한 엔티티의 password 필드에 저장하고
+        * 4. 새로운 비밀번호를 사용자 엔티티 password 필드에 업데이트 시켜준다.
+     * 5. 그리고 PasswordHistory 엔티티 개수가 3이되면 가장 먼저 생성된 엔티티를 제거한다. -> 시간 필드 생성(Timestamped.class)
+     */
+    @Transactional
+    public UserResponseDto changePassword(PasswordDto passwordDto, User loginUser) {
+
+        // 비밀번호 중복 확인
+        String newPassword = passwordDto.getNewPassword();
+        String confirmNewPassword = passwordDto.getConfirmNewPassword();
+        String currentPassword = loginUser.getPassword();
+
+        // 2차 입력 비밀번호와 중복 확인
+        if(!newPassword.equals(confirmNewPassword)) {
+            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 기존 비밀번호와 중복 확인
+        if(passwordEncoder.matches(newPassword, currentPassword)) {
+            throw new IllegalArgumentException("기존의 비밀번호와 동일합니다.");
+        }
+
+        // 기존 비밀번호를 새로 생성한 엔티티의 password 필드에 저장
+        PasswordHistory oldPasswordHistory = new PasswordHistory(currentPassword, loginUser);
+        passwordHistoryRepository.save(oldPasswordHistory);
+
+        // loginUser와 연관된 모든 PasswordHistory 엔티티의 password 필드와 중복 확인
+        boolean match = loginUser.getPassHis().stream().anyMatch(passwordHistory -> passwordEncoder.matches(newPassword, passwordHistory.getPassword()));
+        if(match) {
+            throw new IllegalArgumentException("최근 3번안에 사용한 비밀번호 입니다.");
+        }
+
+        // 새로운 비밀번호를 사용자 엔티티 password 필드에 업데이트
+        loginUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(loginUser);
+
+        // 그리고 PasswordHistory 엔티티 개수가 3이 되면 가장 먼저 생성된 엔티티를 제거한다.
+        loginUser = userRepository.findById(loginUser.getId()).get();
+
+        if(loginUser.getPassHis().size() == 3) {
+            PasswordHistory firstPassHis = loginUser.getPassHis().stream()
+                    .min(Comparator.comparing(PasswordHistory::getCreatedAt))
+                    .orElseThrow(() -> new NoSuchElementException("비밀번호 변경 이력이 존재하지 않습니다."));
+
+            passwordHistoryRepository.delete(firstPassHis);
+        }
+        return new UserResponseDto(loginUser);
     }
 }
