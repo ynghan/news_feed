@@ -1,5 +1,6 @@
 package com.sparta.springprepare.domain;
 
+import com.sparta.springprepare.dto.commentDto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void patch(CommentRequestDto requestDto) {
+        this.content = requestDto.getContent();
+    }
+
 
 }

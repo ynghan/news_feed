@@ -1,9 +1,9 @@
 package com.sparta.springprepare.controller;
 
 
-import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.dto.postDto.PostRequestDto;
 import com.sparta.springprepare.dto.postDto.PostResponseDto;
+import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.PostService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,12 @@ public class PostController {
     @GetMapping("/{followUsername}/posts")
     public List<PostResponseDto> getUserPosts(@PathVariable(name="followUsername") String followUsername, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getUserPosts(followUsername, userDetails.getUser());
+    }
+
+    // 로그인 사용자 게시물 수정하기
+    @PutMapping("/posts/{postId}/update")
+    public PostResponseDto updatePost(@PathVariable(name="postId") Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.updatePost(postId, requestDto, userDetails.getUser());
     }
 
     // 로그인 사용자의 "게시물 개수" 조회하기

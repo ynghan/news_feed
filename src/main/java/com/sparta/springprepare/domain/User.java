@@ -41,6 +41,7 @@ public class User {
     // 인적 정보
     @Column(nullable = false, unique = true)
     private String username;
+
     @Column(nullable = false)
     private String password;
 

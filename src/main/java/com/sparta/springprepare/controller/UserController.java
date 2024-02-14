@@ -109,11 +109,7 @@ public class UserController {
     }
 
 
-    @GetMapping
-    @ResponseBody
-    public List<UserInfoDto> getAllUsers() {
-        return userService.findAllUsers();
-    }
+
 
     // 비밀번호 업데이트
     @PostMapping("/password")
@@ -121,5 +117,6 @@ public class UserController {
         User loginUser = userDetails.getUser();
         return userService.changePassword(dto, loginUser);
     }
+
 }
 

@@ -19,11 +19,7 @@ public class CommentController {
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-    // 모든 댓글 조회하기
-    @GetMapping("/comments")
-    public List<CommentResponseDto> findAllComments() {
-        return commentService.findAll();
-    }
+
     // 특정 사용자의 게시글의 댓글 조회하기
     @GetMapping("/{postId}/comment")
     public List<CommentResponseDto> readCommentsOfPost(@PathVariable("postId") Long postId) {
@@ -44,4 +40,6 @@ public class CommentController {
     public CommentResponseDto deleteCommentOfPost(@PathVariable(name="commentId") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.deleteCommentOfPost(commentId, userDetails);
     }
+
+
 }

@@ -68,7 +68,7 @@ public class CommentService {
         return new CommentResponseDto(findComment);
     }
 
-    public List<CommentResponseDto> findAll() {
+    public List<CommentResponseDto> getAllComments() {
         List<Comment> all = commentRepository.findAll();
         List<CommentResponseDto> dtoList = new ArrayList<>();
         for (Comment comment : all) {
@@ -76,4 +76,21 @@ public class CommentService {
         }
         return dtoList;
     }
+
+    public CommentResponseDto deleteComment(Long commentId) {
+        Comment findComment = checkComment(commentId);
+        commentRepository.delete(findComment);
+        return new CommentResponseDto(findComment);
+    }
+
+    public CommentResponseDto updateComment(CommentRequestDto requestDto, Long commentId) {
+        Comment findComment = checkComment(commentId);
+        findComment.patch(requestDto);
+        return new CommentResponseDto(findComment);
+    }
+
+    private Comment checkComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+    }
+
 }

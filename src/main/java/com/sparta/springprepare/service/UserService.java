@@ -4,6 +4,7 @@ import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.PasswordHistory;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.dto.AuthorityDto;
 import com.sparta.springprepare.dto.PasswordDto;
 import com.sparta.springprepare.dto.PhotoDto;
 import com.sparta.springprepare.dto.userDto.*;
@@ -220,5 +221,41 @@ public class UserService {
             passwordHistoryRepository.delete(firstPassHis);
         }
         return new UserResponseDto(loginUser);
+    }
+
+    // 관리자에 의한 사용자 삭제
+    public UserResponseDto deleteUserByAdmin(String username) {
+        User deleteUser = checkUser(username);
+        userRepository.delete(deleteUser);
+        return new UserResponseDto(deleteUser);
+    }
+
+    public UserResponseDto updateUserByAdmin(String username, UserInfoDto dto) {
+        User updateUser = checkUser(username);
+        updateUser.patch(dto);
+        userRepository.save(updateUser);
+        return new UserResponseDto(updateUser);
+    }
+
+    // 이미 Admin 권할일 때, 예외 처리
+    public AuthorityDto changeUserToAdmin(String username) {
+        User findUser = checkUser(username);
+        findUser.setRole(UserRoleEnum.ADMIN);
+        userRepository.save(findUser);
+
+        return new AuthorityDto(findUser);
+    }
+
+    // 이미 User 권한일 때, 예외 처리
+    public AuthorityDto changeAdminToUser(String username) {
+        User findUser = checkUser(username);
+        findUser.setRole(UserRoleEnum.USER);
+        userRepository.save(findUser);
+
+        return new AuthorityDto(findUser);
+    }
+
+    private User checkUser(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 }
