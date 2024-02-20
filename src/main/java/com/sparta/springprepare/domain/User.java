@@ -1,11 +1,12 @@
 package com.sparta.springprepare.domain;
 
 import com.sparta.springprepare.dto.userDto.UserInfoDto;
-import com.sparta.springprepare.dto.userDto.UserRequestDto;
+import com.sparta.springprepare.dto.userDto.UserReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,8 +57,9 @@ public class User {
     private UserRoleEnum role;
 
 
-    // 히스토리
-    private LocalDateTime created_date;
+    @CreatedDate
+    @Column(nullable = false)
+    private LocalDateTime createAt;
 //    private int age;
 //    private String gender;
 //    private String country;
@@ -85,11 +87,10 @@ public class User {
 
 
     //Dto 매핑
-    public User(UserRequestDto requestDto) {
+    public User(UserReqDto.JoinReqDto requestDto) {
         this.username = requestDto.getUsername();
         this.password = requestDto.getPassword();
         this.email = requestDto.getEmail();
-        this.role = requestDto.getUserRoleEnum();
     }
 
     public void changeProfile(String profile) {

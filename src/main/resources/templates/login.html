@@ -12,12 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
+    <link rel="icon" href="data:;base64,=">
 </head>
 <body>
 <div id="login-form">
     <div id="login-title">Log into Select Shop</div>
     <br>
-    <button id="login-id-btn" onclick="location.href='/api/page/user/signup'">
+    <button id="login-id-btn" onclick="location.href='/user/signup'">
         회원 가입하기
     </button>
     <div>
@@ -70,7 +71,7 @@
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Login Fail");
-                window.location.href = host + '/api/page/login?error'
+                window.location.href = host + '/login?error'
             });
     }
 </script>

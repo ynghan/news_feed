@@ -6,6 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostRequestDto {
+public class PostReqDto {
     private String content;
 }

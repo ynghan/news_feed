@@ -4,9 +4,7 @@ import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.PasswordHistory;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.AuthorityDto;
-import com.sparta.springprepare.dto.PasswordDto;
-import com.sparta.springprepare.dto.PhotoDto;
+import com.sparta.springprepare.dto.userDto.PhotoDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.UserRepository;
@@ -37,7 +35,7 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원가입
-    public void signup(SignupRequestDto requestDto) {
+    public void signup(UserReqDto.JoinReqDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
@@ -124,15 +122,15 @@ public class UserService {
     }
 
     public UserInfoDto getUserInfo(User user) {
-        User findUser = userRepository.findByUsername(user.getUsername()).orElse(null);
+        User findUser = checkUser(user.getUsername());
         if(findUser != null) {
-            return new UserInfoDto(findUser.getUsername(), findUser.getRole(), findUser.getIntroduce(), findUser.getNickname());
+            return new UserInfoDto(findUser);
         }
         return null;
     }
 
     public UserInfoDto postUserInfo(UserInfoDto dto, User user) {
-        User findUser = userRepository.findByUsername(user.getUsername()).get();
+        User findUser = checkUser(user.getUsername());
         findUser.patch(dto);
         userRepository.save(findUser);
         return new UserInfoDto(findUser);
@@ -143,19 +141,19 @@ public class UserService {
     }
 
     public UserInfoDto postUserIntroduce(UserInfoDto dto, User user) {
-        User findUser = userRepository.findById(user.getId()).get();
+        User findUser = checkUser(user.getUsername());
         findUser.patch(dto);
         return new UserInfoDto(findUser);
     }
 
     public ProfileDto getPhotoUrl(String username) {
-        User findUser = userRepository.findByUsername(username).get();
+        User findUser = checkUser(username);
         String photoImage = findUser.getPhotoImage();
         return new ProfileDto(photoImage);
     }
 
     public PhotoDto postPhoto(String photoUrl, User user) {
-        User findUser = userRepository.findByUsername(user.getUsername()).get();
+        User findUser = checkUser(user.getUsername());
         findUser.setPhotoImage(photoUrl);
         User savedUser = userRepository.save(findUser);
         return new PhotoDto(savedUser);
@@ -179,7 +177,7 @@ public class UserService {
      * 5. 그리고 PasswordHistory 엔티티 개수가 3이되면 가장 먼저 생성된 엔티티를 제거한다. -> 시간 필드 생성(Timestamped.class)
      */
     @Transactional
-    public UserResponseDto changePassword(PasswordDto passwordDto, User loginUser) {
+    public UserRespDto.GeneralRespDto changePassword(UserReqDto.PasswordReqDto passwordDto, User loginUser) {
 
         // 비밀번호 중복 확인
         String newPassword = passwordDto.getNewPassword();
@@ -211,7 +209,7 @@ public class UserService {
         userRepository.save(loginUser);
 
         // 그리고 PasswordHistory 엔티티 개수가 3이 되면 가장 먼저 생성된 엔티티를 제거한다.
-        loginUser = userRepository.findById(loginUser.getId()).get();
+        loginUser = checkUser(loginUser.getUsername());
 
         if(loginUser.getPassHis().size() == 3) {
             PasswordHistory firstPassHis = loginUser.getPassHis().stream()
@@ -220,21 +218,21 @@ public class UserService {
 
             passwordHistoryRepository.delete(firstPassHis);
         }
-        return new UserResponseDto(loginUser);
+        return new UserRespDto.GeneralRespDto(loginUser);
     }
 
     // 관리자에 의한 사용자 삭제
-    public UserResponseDto deleteUserByAdmin(String username) {
+    public UserRespDto.GeneralRespDto deleteUserByAdmin(String username) {
         User deleteUser = checkUser(username);
         userRepository.delete(deleteUser);
-        return new UserResponseDto(deleteUser);
+        return new UserRespDto.GeneralRespDto(deleteUser);
     }
 
-    public UserResponseDto updateUserByAdmin(String username, UserInfoDto dto) {
+    public UserRespDto.GeneralRespDto updateUserByAdmin(String username, UserInfoDto dto) {
         User updateUser = checkUser(username);
         updateUser.patch(dto);
-        userRepository.save(updateUser);
-        return new UserResponseDto(updateUser);
+        User userPS = userRepository.save(updateUser);
+        return new UserRespDto.GeneralRespDto(userPS);
     }
 
     // 이미 Admin 권할일 때, 예외 처리

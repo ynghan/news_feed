@@ -2,8 +2,8 @@ package com.sparta.springprepare.service;
 
 import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.Post;
-import com.sparta.springprepare.dto.commentDto.CommentRequestDto;
-import com.sparta.springprepare.dto.commentDto.CommentResponseDto;
+import com.sparta.springprepare.dto.commentDto.CommentReqDto;
+import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.repository.CommentRepository;
 import com.sparta.springprepare.repository.PostRepository;
 import com.sparta.springprepare.security.UserDetailsImpl;
@@ -27,17 +27,17 @@ public class CommentService {
 
     // 특정 게시판의 댓글 목록 조회하기
     @Transactional
-    public List<CommentResponseDto> findCommentOfPost(Long postId) {
+    public List<CommentRespDto> findCommentOfPost(Long postId) {
         List<Comment> commentList = postRepository.findById(postId).get().getComments();
-        List<CommentResponseDto> resDtoList = new ArrayList<>();
+        List<CommentRespDto> resDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
-            resDtoList.add(new CommentResponseDto(comment));
+            resDtoList.add(new CommentRespDto(comment));
         }
         return resDtoList;
     }
 
     // 특정 게시판의 댓글 생성
-    public CommentResponseDto createCommentOfPost(Long postId, CommentRequestDto dto, UserDetailsImpl userDetails) {
+    public CommentRespDto createCommentOfPost(Long postId, CommentReqDto dto, UserDetailsImpl userDetails) {
 
         Post findPost = postRepository.findById(postId).get();
 
@@ -48,45 +48,45 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        return new CommentResponseDto(savedComment);
+        return new CommentRespDto(savedComment);
     }
 
     @Transactional
-    public CommentResponseDto updateCommentOfPost(Long commentId, CommentRequestDto dto, UserDetailsImpl userDetails) {
+    public CommentRespDto updateCommentOfPost(Long commentId, CommentReqDto dto, UserDetailsImpl userDetails) {
         Comment findComment = commentRepository.findById(commentId).get();
         if(!Objects.equals(findComment.getUser().getUsername(), userDetails.getUser().getUsername())) {
             throw new IllegalArgumentException("등록한 댓글이 아닙니다.");
         }
         findComment.setContent(dto.getContent());
         Comment savedComment = commentRepository.save(findComment);
-        return new CommentResponseDto(savedComment);
+        return new CommentRespDto(savedComment);
     }
 
-    public CommentResponseDto deleteCommentOfPost(Long commentId, UserDetailsImpl userDetails) {
+    public CommentRespDto deleteCommentOfPost(Long commentId, UserDetailsImpl userDetails) {
         Comment findComment = commentRepository.findById(commentId).get();
         commentRepository.delete(findComment);
-        return new CommentResponseDto(findComment);
+        return new CommentRespDto(findComment);
     }
 
-    public List<CommentResponseDto> getAllComments() {
+    public List<CommentRespDto> getAllComments() {
         List<Comment> all = commentRepository.findAll();
-        List<CommentResponseDto> dtoList = new ArrayList<>();
+        List<CommentRespDto> dtoList = new ArrayList<>();
         for (Comment comment : all) {
-            dtoList.add(new CommentResponseDto(comment));
+            dtoList.add(new CommentRespDto(comment));
         }
         return dtoList;
     }
 
-    public CommentResponseDto deleteComment(Long commentId) {
+    public CommentRespDto deleteComment(Long commentId) {
         Comment findComment = checkComment(commentId);
         commentRepository.delete(findComment);
-        return new CommentResponseDto(findComment);
+        return new CommentRespDto(findComment);
     }
 
-    public CommentResponseDto updateComment(CommentRequestDto requestDto, Long commentId) {
+    public CommentRespDto updateComment(CommentReqDto requestDto, Long commentId) {
         Comment findComment = checkComment(commentId);
         findComment.patch(requestDto);
-        return new CommentResponseDto(findComment);
+        return new CommentRespDto(findComment);
     }
 
     private Comment checkComment(Long commentId) {

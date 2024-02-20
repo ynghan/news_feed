@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.sparta.springprepare.dto.PhotoDto;
+import com.sparta.springprepare.dto.userDto.PhotoDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.UserService;
 import lombok.RequiredArgsConstructor;

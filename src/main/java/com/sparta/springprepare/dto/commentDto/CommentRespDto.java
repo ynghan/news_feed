@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponseDto {
+public class CommentRespDto {
 
     private Long commentId;
     private Long userId;
     private Long postId;
     private String content;
 
-    public CommentResponseDto(Comment comment) {
+    public CommentRespDto(Comment comment) {
         this.commentId = comment.getId();
         this.userId = comment.getUser().getId();
         this.content = comment.getContent();

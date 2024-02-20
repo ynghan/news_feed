@@ -12,7 +12,7 @@ $(document).ready(function () {
             jqXHR.setRequestHeader('Authorization', auth);
         });
     } else {
-        window.location.href = host + '/api/page/user/login';
+        window.location.href = host + '/user/login';
         return;
     }
 
@@ -79,7 +79,7 @@ function getUserInfo() {
             const isAdmin = !!res.admin;
 
             if (!username) {
-                window.location.href = '/api/page/user/login';
+                window.location.href = '/user/login';
                 return;
             }
 
@@ -233,7 +233,7 @@ function setProfile(event) {
 function goToUserInfo() {
     // 프로필 수정 버튼
     $("#user-info").click(function(){
-        window.location.href ='/api/page/user/info';
+        window.location.href ='/user/info';
     });
 }
 // 게시물 업로드 하기
@@ -294,7 +294,7 @@ function loadPosts() {
 function goToFeed() {
     // 내 게시판 보기 버튼
     $("#user-ok").click(function(){
-        window.location.href = host + '/api/page/feed';
+        window.location.href = host + '/feed';
     });
 }
 function updateIntroduceMyself() {

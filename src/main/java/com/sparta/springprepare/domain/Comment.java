@@ -1,6 +1,6 @@
 package com.sparta.springprepare.domain;
 
-import com.sparta.springprepare.dto.commentDto.CommentRequestDto;
+import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void patch(CommentRequestDto requestDto) {
+    public void patch(CommentReqDto requestDto) {
         this.content = requestDto.getContent();
     }
 

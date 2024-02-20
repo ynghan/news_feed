@@ -6,13 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostResponseDto {
+public class PostRespDto {
 
     private Long postId;
     private String content;
     private Long userId;
 
-    public PostResponseDto(Post post) {
+    public PostRespDto(Post post) {
         this.postId = post.getId();
         this.content = post.getContent();
         this.userId = post.getUser().getId();

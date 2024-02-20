@@ -12,7 +12,7 @@ $(document).ready(function () {
             jqXHR.setRequestHeader('Authorization', auth);
         });
     } else {
-        window.location.href = host + '/api/page/user/login';
+        window.location.href = host + '/user/login';
         return;
     }
     goToFeed();
@@ -22,7 +22,7 @@ $(document).ready(function () {
 function goToFeed() {
     // 내 게시판 보기 버튼
     $("#user-profile").click(function(){
-        window.location.href ='/api/page/feed';
+        window.location.href ='/feed';
     });
 }
 

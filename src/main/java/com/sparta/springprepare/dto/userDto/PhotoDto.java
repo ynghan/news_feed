@@ -1,4 +1,4 @@
-package com.sparta.springprepare.dto;
+package com.sparta.springprepare.dto.userDto;
 
 import com.sparta.springprepare.domain.User;
 import lombok.Getter;

@@ -12,7 +12,6 @@ public class FollowDto {
 
     private String username;
 
-
     public FollowDto(User findFollowUser) {
         this.username = findFollowUser.getUsername();
     }
