@@ -4,7 +4,6 @@ import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.PasswordHistory;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.userDto.PhotoDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.UserRepository;
@@ -54,7 +53,7 @@ public class UserService {
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
+        if (requestDto.isAdmin()) { // JoinReqDto의 admin 필드가 true일 경우
             if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
@@ -62,8 +61,8 @@ public class UserService {
         }
 
         // 사용자 등록
-        User user = new User(username, password, email, role);
-        userRepository.save(user);
+        User userPS = requestDto.toEntity(passwordEncoder);
+        userRepository.save(userPS);
     }
 
     public ProfileDto postProfile(MultipartFile file, User user) {

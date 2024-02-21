@@ -6,31 +6,17 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+<!--    <link rel="stylesheet" type="text/css" href="/css/style.css">-->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <meta charset="UTF-8">
     <title>회원가입 페이지</title>
     <link rel="icon" href="data:;base64,=">
-    <script>
-        function onclickAdmin() {
-            // Get the checkbox
-            var checkBox = document.getElementById("admin-check");
-            // Get the output text
-            var box = document.getElementById("admin-token");
-
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true){
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
-        }
-    </script>
 </head>
 <body>
 <div id="login-form">
     <div id="login-title">Sign up Select Shop</div>
 
-    <form action="/user/signup" method="post">
+    <form action="/user/signup" method="post"> <!-- POST /user/signup 요청 -->
         <div class="login-id-label">Username</div>
         <input type="text" name="username" placeholder="Username" class="login-input-box">
 
@@ -41,7 +27,7 @@
         <input type="text" name="email" placeholder="E-mail" class="login-input-box">
 
         <div>
-            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자
+<!--            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자-->
             <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">
         </div>
         <button id="login-id-submit">회원 가입</button>
@@ -49,3 +35,19 @@
 </div>
 </body>
 </html>
+
+<script>
+    function onclickAdmin() {
+        // Get the checkbox
+        var checkBox = document.getElementById("admin-check");
+        // Get the output text
+        var box = document.getElementById("admin-token");
+
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true){
+            box.style.display = "block";
+        } else {
+            box.style.display = "none";
+        }
+    }
+</script>

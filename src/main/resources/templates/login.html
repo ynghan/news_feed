@@ -6,7 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+<!--    <link rel="stylesheet" type="text/css" href="/css/style.css">-->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
@@ -18,7 +19,7 @@
 <div id="login-form">
     <div id="login-title">Log into Select Shop</div>
     <br>
-    <button id="login-id-btn" onclick="location.href='/user/signup'">
+    <button id="login-id-btn" onclick="location.href='/user/signup'"> <!-- GET : /user/signup 요청 -->
         회원 가입하기
     </button>
     <div>
@@ -66,7 +67,7 @@
                 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                     jqXHR.setRequestHeader('Authorization', token);
                 });
-
+                // 현재 페이지를 메인 페이지로 이동
                 window.location.href = host
             })
             .fail(function (jqXHR, textStatus) {

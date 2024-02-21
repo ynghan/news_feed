@@ -19,12 +19,7 @@ $(document).ready(function () {
 
 })
 
-function goToFeed() {
-    // 내 게시판 보기 버튼
-    $("#user-profile").click(function(){
-        window.location.href ='/feed';
-    });
-}
+
 
 function logout() {
     // 토큰 삭제

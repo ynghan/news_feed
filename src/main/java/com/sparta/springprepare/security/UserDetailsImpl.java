@@ -2,6 +2,8 @@ package com.sparta.springprepare.security;
 
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,19 +13,11 @@ import java.util.Collection;
 
 // UserDetails 클래스 기능을 커스텀하는 클래스
 // 특정 사용자의 토큰 정보를 조회하는 클래스
+@Getter
+@RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
-
-    public UserDetailsImpl(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getEmail() {return user.getEmail();}
 
     @Override
     public String getPassword() {

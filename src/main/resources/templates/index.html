@@ -11,20 +11,27 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/index.js}"></script>
+<!--    <script th:src="@{/js/index.js}"></script>-->
     <title>피드 게시판</title>
     <link rel="icon" href="data:;base64,=">
 </head>
 <body>
 <!--header-->
-    <div>
-        <div id="user-profile">
-            <button id="profile-button" onclick="goToFeed()">내 피드</button>
-        </div>
+<div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
+    <div id="user-profile">
+        <button id="profile-button" onclick="goToFeed()" style="font-size: 20px; padding: 10px 20px;">내 피드</button>
     </div>
+</div>
 <!--/header-->
 
 
 </body>
 </html>
-
+<script>
+    function goToFeed() {
+        // 내 게시판 보기 버튼
+        $("#user-profile").click(function(){
+            window.location.href ='/feed';
+        });
+    }
+</script>

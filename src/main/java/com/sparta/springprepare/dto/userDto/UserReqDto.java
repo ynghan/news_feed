@@ -1,5 +1,7 @@
 package com.sparta.springprepare.dto.userDto;
 
+import com.sparta.springprepare.domain.User;
+import com.sparta.springprepare.domain.UserRoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -7,6 +9,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -26,19 +31,28 @@ public class UserReqDto {
         @NotEmpty
         @Pattern(regexp="^[a-z0-9]{4,10}$", message = "username은 최소 4자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성되어야 합니다.")
         private String username;
-
         @NotEmpty
         @Size(min = 4, max = 10, message = "패스워드는 최소 4자 이상, 10자 이하이 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 합니다.")
         @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W).*$", message = "비밀번호는 알파벳 대소문자, 숫자, 특수문자로 구성되어야 합니다.")
         private String password;
 
         @NotEmpty
-        @Pattern(regexp="^[a-zA-Z0-9]{2,6}@[a-zA-Z0-9]{1,6}\\.[a-zA-Z]{2,3}$", message = "이메일 형식으로 작성해주세요")
+        @Pattern(regexp="^[a-zA-Z0-9]{2,8}@[a-zA-Z0-9]{1,6}\\.[a-zA-Z]{2,3}$", message = "이메일 형식으로 작성해주세요")
         private String email;
 
-        private boolean admin = false;
+        private boolean admin = false; // 모든 회원가입은 false
 
         private String adminToken = "";
+
+        public User toEntity(PasswordEncoder passwordEncoder) {
+            return User.builder()
+                    .username(username)
+                    .password(passwordEncoder.encode(password))
+                    .email(email)
+                    .role(UserRoleEnum.USER)
+                    .createAt(LocalDateTime.now())
+                    .build();
+        }
     }
 
     @Getter

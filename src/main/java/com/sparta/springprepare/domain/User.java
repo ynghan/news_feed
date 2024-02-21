@@ -3,6 +3,7 @@ package com.sparta.springprepare.domain;
 import com.sparta.springprepare.dto.userDto.UserInfoDto;
 import com.sparta.springprepare.dto.userDto.UserReqDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,13 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
-
-    public User(String username, String password, String email, UserRoleEnum role) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -60,6 +54,7 @@ public class User {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createAt;
+
 //    private int age;
 //    private String gender;
 //    private String country;
@@ -85,6 +80,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<PasswordHistory> passHis = new ArrayList<>();
 
+    @Builder
+    public User(String profile, String photoImage, String introduce, String username, String password, String email, UserRoleEnum role, LocalDateTime createAt) {
+        this.profile = profile;
+        this.photoImage = photoImage;
+        this.introduce = introduce;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.createAt = createAt;
+    }
 
     //Dto 매핑
     public User(UserReqDto.JoinReqDto requestDto) {
@@ -92,6 +98,7 @@ public class User {
         this.password = requestDto.getPassword();
         this.email = requestDto.getEmail();
     }
+
 
     public void changeProfile(String profile) {
         this.profile = profile;

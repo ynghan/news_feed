@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -23,10 +23,10 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    // /api/user/signup
+    // /user/signup
     // 회원가입
     @PostMapping("/user/signup")
-    public String signup(final @Valid @RequestBody UserReqDto.JoinReqDto requestDto, BindingResult bindingResult) {
+    public String signup(@Valid @ModelAttribute UserReqDto.JoinReqDto requestDto, BindingResult bindingResult) { // 폼 데이터로 로그인하기 때문에 @RequestBody가 아닌 @ModelAttribute
         log.info(requestDto.getUsername());
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
