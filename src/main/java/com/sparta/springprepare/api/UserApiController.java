@@ -6,11 +6,16 @@ import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -21,6 +26,23 @@ public class UserApiController {
 
     public UserApiController(UserService userService) {
         this.userService = userService;
+    }
+
+
+    // 회원가입
+    @PostMapping("/user/signup")
+    public ResponseEntity<?> signup(@Valid @RequestBody UserReqDto.JoinReqDto requestDto, BindingResult bindingResult) { // ajax로 로그인하기 때문에 @RequestBody
+        log.info(requestDto.getUsername());
+        // Validation 예외처리
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        if(!fieldErrors.isEmpty()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        User userPS = userService.signup(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserRespDto.JoinRespDto(userPS));
     }
 
     // 로그인 사용자 회원 정보 불러오기

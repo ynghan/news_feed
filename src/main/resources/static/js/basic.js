@@ -6,7 +6,7 @@ let targetId;
 
 $(document).ready(function () {
     const auth = getToken();
-
+    console.log(auth);
     if (auth !== undefined && auth !== '') {
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             jqXHR.setRequestHeader('Authorization', auth);
@@ -22,7 +22,6 @@ $(document).ready(function () {
     countFollower();
     getProfile();
     loadPosts();
-    goToFeed();
     getIntroduceMyself();
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
@@ -31,33 +30,10 @@ $(document).ready(function () {
     //         execSearch();
     //     }
     // });
-    $('#close').on('click', function () {
-        $('#container').removeClass('active');
-    })
-    $('#close2').on('click', function () {
-        $('#container2').removeClass('active');
-    })
-    $('.nav div.nav-see').on('click', function () {
-        $('div.nav-see').addClass('active');
-        $('div.nav-search').removeClass('active');
 
-        $('#see-area').show();
-        $('#search-area').hide();
-    })
-    $('.nav div.nav-search').on('click', function () {
-        $('div.nav-see').removeClass('active');
-        $('div.nav-search').addClass('active');
-
-        $('#see-area').hide();
-        $('#search-area').show();
-    })
-
-    $('#see-area').show();
-    $('#search-area').hide();
 })
 
-$.ajax({
-    // ...
+$.ajax({ // 401 에러  시, /login 이동
     error: function(jqXHR, textStatus, errorThrown) {
         if (jqXHR.status === 401) {
             // 401 Unauthorized 응답을 받았을 때의 처리
@@ -65,29 +41,31 @@ $.ajax({
             window.location.href = "/login";
         }
     }
-});
+}); // 401 에러
 
+$('#close').on('click', function () {
+    $('#container').removeClass('active');
+})
+$('#close2').on('click', function () {
+    $('#container2').removeClass('active');
+})
+$('.nav div.nav-see').on('click', function () {
+    $('div.nav-see').addClass('active');
+    $('div.nav-search').removeClass('active');
 
-function getUserInfo() {
-    $.ajax({
-        type: 'GET',
-        url: `/api/user/info`,
-        contentType: 'application/json',
-    })
-        .done(function (res, status, xhr) {
-            const username = res.username;
-            const isAdmin = !!res.admin;
+    $('#see-area').show();
+    $('#search-area').hide();
+})
+$('.nav div.nav-search').on('click', function () {
+    $('div.nav-see').removeClass('active');
+    $('div.nav-search').addClass('active');
 
-            if (!username) {
-                window.location.href = '/user/login';
-                return;
-            }
+    $('#see-area').hide();
+    $('#search-area').show();
+})
+$('#see-area').show();
+$('#search-area').hide();
 
-        })
-        .fail(function (jqXHR, textStatus) {
-            logout();
-        });
-}
 
 function countPost() {
 
@@ -110,7 +88,6 @@ function countPost() {
     });
     return "";
 }
-
 function countFollowee() {
 
     dataSource = `/api/user/followee/count`;
@@ -132,7 +109,6 @@ function countFollowee() {
     });
     return "";
 }
-
 function countFollower() {
 
     dataSource = `/api/user/follower/count`;
@@ -154,11 +130,9 @@ function countFollower() {
     });
     return "";
 }
-
 function uploadProfile() {
     $('#profile-input').click();
 }
-
 function getProfile() {
     $.ajax({
         type: 'GET',
@@ -176,7 +150,6 @@ function getProfile() {
         }
     });
 }
-
 function getPhoto() {
 
     let username = "ynghan56";
@@ -197,9 +170,6 @@ function getPhoto() {
         }
     });
 }
-
-
-
 function setProfile(event) {
     let file = event.target.files[0];
     let reader = new FileReader();
@@ -229,7 +199,6 @@ function setProfile(event) {
         }
     });
 }
-
 function goToUserInfo() {
     // 프로필 수정 버튼
     $("#user-info").click(function(){
@@ -237,7 +206,6 @@ function goToUserInfo() {
     });
 }
 // 게시물 업로드 하기
-
 function uploadPost() {
     var formData = new FormData();
     formData.append('title', $('#post-title').val());
@@ -264,8 +232,6 @@ function uploadPost() {
         }
     });
 }
-
-
 function loadPosts() {
     $.ajax({
         type: 'GET',
@@ -288,13 +254,6 @@ function loadPosts() {
             }
             logout();
         }
-    });
-}
-
-function goToFeed() {
-    // 내 게시판 보기 버튼
-    $("#user-ok").click(function(){
-        window.location.href = host + '/feed';
     });
 }
 function updateIntroduceMyself() {
@@ -335,7 +294,6 @@ function logout() {
     Cookies.remove('Authorization', {path: '/'});
     window.location.href = host + '/api/user/logout';
 }
-
 function getToken() {
     let auth = Cookies.get('Authorization');
 

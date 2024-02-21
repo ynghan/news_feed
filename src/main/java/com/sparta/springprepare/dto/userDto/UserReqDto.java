@@ -31,6 +31,7 @@ public class UserReqDto {
         @NotEmpty
         @Pattern(regexp="^[a-z0-9]{4,10}$", message = "username은 최소 4자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성되어야 합니다.")
         private String username;
+
         @NotEmpty
         @Size(min = 4, max = 10, message = "패스워드는 최소 4자 이상, 10자 이하이 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 합니다.")
         @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W).*$", message = "비밀번호는 알파벳 대소문자, 숫자, 특수문자로 구성되어야 합니다.")
@@ -57,7 +58,7 @@ public class UserReqDto {
 
     @Getter
     @Setter
-    public class PasswordReqDto {
+    public static class PasswordReqDto {
 
         @NotBlank
         @Size(min = 4, max = 10, message = "패스워드는 4자 이상 10자 이하로 입력해주세요.")

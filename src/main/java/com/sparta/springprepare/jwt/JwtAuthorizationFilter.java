@@ -33,6 +33,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull  HttpServletRequest req, @NonNull HttpServletResponse res, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String tokenValue = jwtUtil.getJwtFromHeader(req);
+        log.info("토큰값 확인 : " + tokenValue);
 
         if (StringUtils.hasText(tokenValue)) {
 

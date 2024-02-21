@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
 <!--    <link rel="stylesheet" type="text/css" href="/css/style.css">-->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <title>회원가입 페이지</title>
     <link rel="icon" href="data:;base64,=">
@@ -15,23 +17,19 @@
 <body>
 <div id="login-form">
     <div id="login-title">Sign up Select Shop</div>
+        <form id="signup-form">
+            <div class="login-id-label">Username</div>
+            <input type="text" name="username" placeholder="Username" class="login-input-box">
 
-    <form action="/user/signup" method="post"> <!-- POST /user/signup 요청 -->
-        <div class="login-id-label">Username</div>
-        <input type="text" name="username" placeholder="Username" class="login-input-box">
+            <div class="login-id-label">Password</div>
+            <input type="password" name="password" class="login-input-box">
 
-        <div class="login-id-label">Password</div>
-        <input type="password" name="password" class="login-input-box">
-
-        <div class="login-id-label">E-mail</div>
-        <input type="text" name="email" placeholder="E-mail" class="login-input-box">
-
-        <div>
+            <div class="login-id-label">E-mail</div>
+            <input type="text" name="email" placeholder="E-mail" class="login-input-box">
 <!--            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자-->
-            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">
-        </div>
-        <button id="login-id-submit">회원 가입</button>
-    </form>
+<!--            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">-->
+            <button id="login-id-submit" type="button">회원 가입</button>
+        </form>
 </div>
 </body>
 </html>
@@ -50,4 +48,28 @@
             box.style.display = "none";
         }
     }
+
+    $(document).ready(function() {
+        $('#login-id-submit').click(function() {
+            var formData = {
+                username: $('input[name=username]').val(),
+                password: $('input[name=password]').val(),
+                email: $('input[name=email]').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/user/signup',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    window.location.href = '/user/login'; // 성공 시 로그인 페이지로 리다이렉트
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert('회원가입에 실패하였습니다.'); // 실패 시 알림
+                }
+            });
+        });
+    });
 </script>

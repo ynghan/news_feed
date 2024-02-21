@@ -90,3 +90,31 @@
     </div>
 </body>
 </html>
+<script>
+    function goToFeed() {
+        // 내 게시판 보기 버튼
+        $("#user-ok").click(function(){
+            window.location.href = host + '/feed';
+        });
+    }
+    function getUserInfo() {
+        $.ajax({
+            type: 'GET',
+            url: `/user/info`,
+            contentType: 'application/json',
+        })
+            .done(function (res, status, xhr) {
+                const username = res.username;
+                const isAdmin = !!res.admin;
+
+                if (!username) {
+                    window.location.href = '/user/login';
+                    return;
+                }
+
+            })
+            .fail(function (jqXHR, textStatus) {
+                logout();
+            });
+    }
+</script>

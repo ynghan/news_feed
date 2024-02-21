@@ -62,18 +62,18 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/user/signup", "/user/login", "/").permitAll()
+                        .requestMatchers("/","/user/signup", "/user/login", "/api/user/signup").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
         // 로그인 사용
-        http.formLogin(AbstractHttpConfigurer::disable);
-//        http.formLogin((formLogin) ->
-//                formLogin
-//                        // 로그인 View 제공 (GET /api/user/login-page)
-//                        .loginPage("/user/login").permitAll()
-//                        .defaultSuccessUrl("/")
-//        );
+//        http.formLogin(AbstractHttpConfigurer::disable);
+        http.formLogin((formLogin) ->
+                formLogin
+                        // 로그인 View 제공 (GET /api/user/login-page)
+                        .loginPage("/user/login").permitAll()
+                        .defaultSuccessUrl("/")
+        );
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);

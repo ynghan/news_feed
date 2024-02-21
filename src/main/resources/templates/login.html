@@ -59,21 +59,21 @@
             contentType: "application/json",
             data: JSON.stringify({username: username, password: password}),
         })
-            .done(function (res, status, xhr) {
-                const token = xhr.getResponseHeader('Authorization');
-                console.log("before cookies set")
-                Cookies.set('Authorization', token, {path: '/'})
-                console.log("after cookies set")
-                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', token);
-                });
-                // 현재 페이지를 메인 페이지로 이동
-                window.location.href = host
-            })
-            .fail(function (jqXHR, textStatus) {
-                alert("Login Fail");
-                window.location.href = host + '/login?error'
+        .done(function (res, status, xhr) {
+            const token = xhr.getResponseHeader('Authorization');
+            console.log("before cookies set")
+            Cookies.set('Authorization', token, {path: '/'})
+            console.log("after cookies set")
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader('Authorization', token);
             });
+            // 현재 페이지를 메인 페이지로 이동
+            window.location.href = host
+        })
+        .fail(function (jqXHR, textStatus) {
+            alert("Login Fail");
+            window.location.href = host + '/login?error'
+        });
     }
 </script>
 </html>

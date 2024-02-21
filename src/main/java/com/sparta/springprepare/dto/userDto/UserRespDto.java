@@ -30,13 +30,14 @@ public class UserRespDto {
         // 유효성 검사
         private Long id;
         private String username;
-        private String fullname;
 
         public JoinRespDto(User user) {
             this.id = user.getId();
             this.username = user.getUsername();
         }
     }
+
+
     @Getter
     @Setter
     public static class GeneralRespDto {

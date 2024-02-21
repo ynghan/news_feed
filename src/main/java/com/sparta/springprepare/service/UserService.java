@@ -34,7 +34,7 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원가입
-    public void signup(UserReqDto.JoinReqDto requestDto) {
+    public User signup(UserReqDto.JoinReqDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
@@ -61,8 +61,10 @@ public class UserService {
         }
 
         // 사용자 등록
-        User userPS = requestDto.toEntity(passwordEncoder);
-        userRepository.save(userPS);
+        User user = requestDto.toEntity(passwordEncoder);
+        User userPS = userRepository.save(user);
+
+        return userPS;
     }
 
     public ProfileDto postProfile(MultipartFile file, User user) {
