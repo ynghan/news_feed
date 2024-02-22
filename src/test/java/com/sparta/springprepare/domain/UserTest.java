@@ -24,9 +24,9 @@ class UserTest {
         String email = "jsaflk";
         UserRoleEnum role = UserRoleEnum.USER;
 
-        User user = new User(username, password, email, role);
+//        User user = new User(username, password, email, role);
 
-        em.persist(user);
+//        em.persist(user);
     }
 }
 

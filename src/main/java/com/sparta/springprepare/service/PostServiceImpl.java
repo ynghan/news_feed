@@ -7,7 +7,7 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.postDto.PostReqDto;
 import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
-import com.sparta.springprepare.repository.PostRepository;
+import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

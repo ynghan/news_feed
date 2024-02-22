@@ -4,7 +4,7 @@ import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.FollowDto;
 import com.sparta.springprepare.repository.FollowRepository;
-import com.sparta.springprepare.repository.UserRepository;
+import com.sparta.springprepare.repository.user.UserRepository;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.sparta.springprepare.security;
 
 import com.sparta.springprepare.domain.User;
-import com.sparta.springprepare.repository.UserRepository;
+import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

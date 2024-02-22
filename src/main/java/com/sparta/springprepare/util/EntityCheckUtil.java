@@ -3,9 +3,9 @@ package com.sparta.springprepare.util;
 import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.domain.User;
-import com.sparta.springprepare.repository.CommentRepository;
-import com.sparta.springprepare.repository.PostRepository;
-import com.sparta.springprepare.repository.UserRepository;
+import com.sparta.springprepare.repository.comment.CommentRepository;
+import com.sparta.springprepare.repository.post.PostRepository;
+import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

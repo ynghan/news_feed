@@ -5,7 +5,7 @@ import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.CommentLike;
 import com.sparta.springprepare.dto.CommentLikeDto;
 import com.sparta.springprepare.repository.CommentLikeRepository;
-import com.sparta.springprepare.repository.CommentRepository;
+import com.sparta.springprepare.repository.comment.CommentRepository;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
