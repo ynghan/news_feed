@@ -29,8 +29,10 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void patch(CommentReqDto requestDto) {
+    public void patch(CommentReqDto requestDto, Post post, User user) {
         this.content = requestDto.getContent();
+        this.post = post;
+        this.user = user;
     }
 
 

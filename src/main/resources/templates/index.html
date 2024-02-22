@@ -34,7 +34,7 @@
             url: '/feed',
             method: 'GET',
             beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                xhr.setRequestHeader('Authorization', Cookies.get('Authorization'));
             },
             success: function(data) {
                 // 페이지 이동 처리

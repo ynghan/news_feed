@@ -7,27 +7,25 @@ import com.sparta.springprepare.dto.CommentLikeDto;
 import com.sparta.springprepare.repository.CommentLikeRepository;
 import com.sparta.springprepare.repository.CommentRepository;
 import com.sparta.springprepare.security.UserDetailsImpl;
+import com.sparta.springprepare.util.EntityCheckUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentLikeApiController {
 
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
-
-    public CommentLikeApiController(CommentRepository commentRepository, CommentLikeRepository commentLikeRepository) {
-        this.commentRepository = commentRepository;
-        this.commentLikeRepository = commentLikeRepository;
-    }
-
+    private final EntityCheckUtil entityCheckUtil;
 
     // 로그인 사용자가 댓글에 좋아요를 남긴다. 본인이 작성한 댓글에는 좋아요를 남길 수 없다.
     @PostMapping("/like/comment/{commentId}")
     public CommentLikeDto pushLikeToComment(@PathVariable(name="commentId") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Comment findComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        Comment findComment = entityCheckUtil.checkCommentById(commentId);
 
         if(findComment.getUser().equals(userDetails.getUser())) {
             throw new IllegalArgumentException("자신의 댓글에는 좋아요를 누를 수 없습니다.");

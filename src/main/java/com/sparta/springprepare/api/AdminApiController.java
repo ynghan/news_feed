@@ -9,6 +9,7 @@ import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.UserInfoDto;
 import com.sparta.springprepare.dto.userDto.UserRespDto;
 import com.sparta.springprepare.service.CommentService;
+import com.sparta.springprepare.service.CommentServiceImpl;
 import com.sparta.springprepare.service.PostService;
 import com.sparta.springprepare.service.UserService;
 import org.aspectj.lang.annotation.RequiredTypes;
@@ -28,7 +29,7 @@ public class AdminApiController {
     private final PostService postService;
     private final UserService userService;
 
-    public AdminApiController(CommentService commentService, PostService postService, UserService userService) {
+    public AdminApiController(CommentServiceImpl commentService, PostService postService, UserService userService) {
         this.commentService = commentService;
         this.postService = postService;
         this.userService = userService;

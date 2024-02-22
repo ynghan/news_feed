@@ -3,7 +3,6 @@ let targetId;
 
 // 주로 DOM 요소에 이벤트 핸들러를 등록하거나,
 // 페이지 로딩이 완료된 직후에 실행해야 하는 초기화 코드를 작성하는 데 사용
-
 $(document).ready(function () {
     const auth = getToken();
     console.log(auth);
@@ -13,16 +12,7 @@ $(document).ready(function () {
         });
     } else {
         window.location.href = host + '/user/login';
-        return;
     }
-
-    getUserInfo();
-    countPost();
-    countFollowee();
-    countFollower();
-    getProfile();
-    loadPosts();
-    getIntroduceMyself();
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
     // $('#query').on('keypress', function (e) {
@@ -232,6 +222,7 @@ function uploadPost() {
         }
     });
 }
+
 function loadPosts() {
     $.ajax({
         type: 'GET',

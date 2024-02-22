@@ -19,7 +19,7 @@ import java.util.Date;
 // jwt 토큰에 필요한 모든 정보를 저장해 놓고 활용하는 클래스 : 헤더에 jwt를 저장하는 방식 사용
 public class JwtUtil {
     // Header KEY 값
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "authorization";
     // 사용자 권한 값의 KEY
     public static final String AUTHORIZATION_KEY = "auth";
     // Token 식별자
@@ -54,6 +54,7 @@ public class JwtUtil {
     // header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        log.info("bearerToken : " + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
