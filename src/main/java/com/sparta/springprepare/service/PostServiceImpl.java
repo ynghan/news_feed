@@ -10,6 +10,8 @@ import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +37,8 @@ public class PostServiceImpl implements PostService {
     }
 
     // 특정 사용자 게시물 불러오기
-    public List<PostRespDto> getPosts(User user) {
-        List<Post> postList = postRepository.findAllByUser(user);
+    public List<PostRespDto> getPosts(User user, Pageable pageable) {
+        Page<Post> postList = postRepository.findAllByUser(user, pageable);
         List<PostRespDto> responseDtoList = new ArrayList<>();
 
         for (Post post : postList) {
@@ -47,7 +49,7 @@ public class PostServiceImpl implements PostService {
 
     // 조회할 사용자가 로그인 사용자가 팔로우한 사용자 목록에 포함되어 있어야 사용자의 게시물을 조회할 수 있다.
     @Transactional
-    public List<PostRespDto> getUserPosts(String followUsername, User loginUser) {
+    public List<PostRespDto> getUserPosts(String followUsername, User loginUser, Pageable pageable) {
         Long findUserId = entityCheckUtil.checkUserByUsername(followUsername).getId();
         loginUser = entityCheckUtil.checkUserById(loginUser.getId());
 
@@ -55,7 +57,7 @@ public class PostServiceImpl implements PostService {
                 .stream().filter(follow -> follow.getFollowee().getId().equals(findUserId))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 팔로우한 사용자가 아닙니다."));
 
-        List<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee());
+        Page<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee(), pageable);
         ArrayList<PostRespDto> responseDtoList = new ArrayList<>();
         for (Post post : postList) {
             responseDtoList.add(new PostRespDto(post));
@@ -64,10 +66,10 @@ public class PostServiceImpl implements PostService {
     }
 
     // 게시물 개수 불러오기
-    public CountDto getPostCount(User user) {
-        List<Post> postList = postRepository.findAllByUser(user);
+    public CountDto getPostCount(User user, Pageable pageable) {
+        Page<Post> postList = postRepository.findAllByUser(user, pageable);
 
-        long count = postList.size();
+        long count = postList.getSize();
 
         return new CountDto(count);
     }

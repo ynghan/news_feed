@@ -1,12 +1,15 @@
 package com.sparta.springprepare.repository.user;
 
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.support.PageableExecutionUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.sparta.springprepare.domain.QFollow.follow;
@@ -14,7 +17,7 @@ import static com.sparta.springprepare.domain.QUser.user;
 
 
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserQueryRepository {
+public class UserRepositoryImpl implements UserRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -32,14 +35,45 @@ public class UserRepositoryImpl implements UserQueryRepository {
 
     @Override
     // 특정 사용자를 팔로우한 다른 사용자들 조회
-    public List<Follow> findWithFolloweesByUsername(@Param("username") String username) {
-        return jpaQueryFactory.selectFrom(follow).innerJoin(follow.follower).fetchJoin().where(follow.followee.username.eq(username)).fetch();
+    public Page<Follow> findWithFolloweesByUsername(@Param("username") String username, Pageable pageable) {
+        var query = jpaQueryFactory.selectFrom(follow)
+                .innerJoin(follow.follower)
+                .fetchJoin()
+                .where(follow.followee.username.eq(username))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        query.orderBy(follow.createdAt.desc());
+
+        var follows = query.fetch();
+
+        Long totalSize = jpaQueryFactory.select(Wildcard.count)
+                .from(follow)
+                .where(follow.followee.username.eq(username))
+                .fetch().get(0);
+
+        return PageableExecutionUtils.getPage(follows, pageable, () -> totalSize);
     }
 
     @Override
     // 특정 사용자가 팔로우한 다른 사용자들 조회
 //    @Query("select f from Follow f join fetch f.followee where f.follower.username = :username")
-    public List<Follow> findWithFollowersByUsername(@Param("username") String username) {
-        return jpaQueryFactory.selectFrom(follow).innerJoin(follow.followee).fetchJoin().where(follow.follower.username.eq(username)).fetch();
+    public Page<Follow> findWithFollowersByUsername(@Param("username") String username, Pageable pageable) {
+        var query = jpaQueryFactory
+                .selectFrom(follow)
+                .innerJoin(follow.followee)
+                .fetchJoin()
+                .where(follow.follower.username.eq(username))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+        query.orderBy(follow.createdAt.desc());
+        var follows = query.fetch();
+        Long totalSize = jpaQueryFactory.select(Wildcard.count)
+                .from(follow)
+                .where(follow.follower.username.eq(username))
+                .fetch().get(0);
+
+        return PageableExecutionUtils.getPage(follows, pageable, () -> totalSize);
+
     }
 }

@@ -7,6 +7,8 @@ import com.sparta.springprepare.repository.FollowRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +38,8 @@ public class FollowServiceImpl implements FollowService {
     }
 
     // 특정 사용자의 팔로위 리스트 조회하기
-    public List<FollowDto> findFolloweeListOfUser(String username) {
-        List<Follow> findFolloweeEntities = userRepository.findWithFolloweesByUsername(username);
+    public List<FollowDto> findFolloweeListOfUser(String username, Pageable pageable) {
+        Page<Follow> findFolloweeEntities = userRepository.findWithFolloweesByUsername(username, pageable);
         ArrayList<FollowDto> dtoList = new ArrayList<>();
 
         for (Follow findFollowEntity : findFolloweeEntities) {

@@ -13,6 +13,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    @Override
     public Optional<Comment> findById(Long id) {
         Comment commentPS = jpaQueryFactory.selectFrom(comment).where(comment.id.eq(id)).fetchOne();
         return Optional.ofNullable(commentPS);

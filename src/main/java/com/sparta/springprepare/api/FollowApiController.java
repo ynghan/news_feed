@@ -4,6 +4,10 @@ package com.sparta.springprepare.api;
 import com.sparta.springprepare.dto.FollowDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.FollowService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +32,9 @@ public class FollowApiController {
 
     // 특정 사용자(username)의 "팔로위" 목록 조회
     @GetMapping("/{username}/followee")
-    public List<FollowDto> findFolloweeUser(@PathVariable("username") String username) {
-        return followService.findFolloweeListOfUser(username);
+    public List<FollowDto> findFolloweeUser(@PathVariable("username") String username, @PageableDefault(value=10)
+    @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
+        return followService.findFolloweeListOfUser(username, pageable);
     }
 
     // 로그인 사용자의 "팔로우" 목록 조회
@@ -40,8 +45,9 @@ public class FollowApiController {
 
     // 로그인 사용자의 "팔로위" 목록 조회
     @GetMapping("/followee")
-    public List<FollowDto> findFolloweeListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return followService.findFolloweeListOfUser(userDetails.getUser().getUsername());
+    public List<FollowDto> findFolloweeListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
+        return followService.findFolloweeListOfUser(userDetails.getUser().getUsername(), pageable);
     }
 
     // 로그인 사용자가 특정 사용자(username)를 팔로우 -> 게시물의 조회 권한을 얻을 수 있다.

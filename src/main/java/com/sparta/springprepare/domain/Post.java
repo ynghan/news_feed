@@ -12,15 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Post {
+public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
 
     private String content;
-
-
 
     /**
      * 연관 관계 매핑
