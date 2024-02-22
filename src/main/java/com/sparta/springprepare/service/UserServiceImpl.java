@@ -6,7 +6,7 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
-import com.sparta.springprepare.repository.UserRepository;
+import com.sparta.springprepare.repository.user.UserRepository;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
