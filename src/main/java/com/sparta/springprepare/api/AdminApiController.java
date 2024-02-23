@@ -1,11 +1,12 @@
 package com.sparta.springprepare.api;
 
 import com.sparta.springprepare.domain.UserRoleEnum;
-import com.sparta.springprepare.dto.userDto.AuthorityDto;
+import com.sparta.springprepare.dto.ResponseDto;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.dto.postDto.PostReqDto;
 import com.sparta.springprepare.dto.postDto.PostRespDto;
+import com.sparta.springprepare.dto.userDto.AuthorityDto;
 import com.sparta.springprepare.dto.userDto.UserInfoDto;
 import com.sparta.springprepare.dto.userDto.UserRespDto;
 import com.sparta.springprepare.service.comment.CommentService;
@@ -37,73 +38,74 @@ public class AdminApiController {
 
     // 관리자의 전체 댓글 조회하기
     @GetMapping("/comment/all")
-    public ResponseEntity<List<CommentRespDto>> getAllComments() {
+    public ResponseEntity<?> getAllComments() {
         List<CommentRespDto> allComments = commentService.getAllComments();
-        return ResponseEntity.status(HttpStatus.OK).body(allComments);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 전체 댓글 조회", allComments), HttpStatus.OK);
     }
     // 관리자의 특정 댓글 삭제하기
     @DeleteMapping("/{commentId}/delete")
-    public ResponseEntity<CommentRespDto> deleteComment(@PathVariable(name="commentId") Long commentId) {
+    public ResponseEntity<?> deleteComment(@PathVariable(name="commentId") Long commentId) {
         CommentRespDto deleteCommentDto = commentService.deleteComment(commentId);
-        return ResponseEntity.status(HttpStatus.OK).body(deleteCommentDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 특정 댓글 삭제", deleteCommentDto), HttpStatus.OK);
     }
     // 관리자의 특정 댓글 수정하기
     @PutMapping("/{commentId}/update")
-    public ResponseEntity<CommentRespDto> updateComment(@RequestBody CommentReqDto requestDto, @PathVariable(name="commentId") Long commentId) {
+    public ResponseEntity<?> updateComment(@RequestBody CommentReqDto requestDto, @PathVariable(name="commentId") Long commentId) {
         CommentRespDto updateCommentDto = commentService.updateComment(requestDto, commentId);
-        return ResponseEntity.status(HttpStatus.OK).body(updateCommentDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 특정 댓글 수정", updateCommentDto), HttpStatus.OK);
     }
     // 관리자의 전체 게시물 조회하기
     @GetMapping("/post/all")
-    public ResponseEntity<List<PostRespDto>> getAllPosts() {
+    public ResponseEntity<?> getAllPosts() {
         List<PostRespDto> allPosts = postService.getAllPosts();
-        return ResponseEntity.status(HttpStatus.OK).body(allPosts);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 전체 게시물 조회", allPosts), HttpStatus.OK);
     }
     // 관리자의 특정 게시물 삭제하기
     @DeleteMapping("/{postId}/delete")
-    public ResponseEntity<PostRespDto> deletePost(@PathVariable(name="postId") Long postId) {
+    public ResponseEntity<?> deletePost(@PathVariable(name="postId") Long postId) {
         PostRespDto deleteDto = postService.deletePost(postId);
-        return ResponseEntity.status(HttpStatus.OK).body(deleteDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 특정 게시물 삭제", deleteDto), HttpStatus.OK);
     }
     // 관리자의 특정 게시물 수정하기
     @PutMapping("/{postId}/update")
-    public ResponseEntity<PostRespDto> updatePost(@RequestBody PostReqDto requestDto, @PathVariable(name="postId") Long postId) {
+    public ResponseEntity<?> updatePost(@RequestBody PostReqDto requestDto, @PathVariable(name="postId") Long postId) {
         PostRespDto postRespDto = postService.updatePost(requestDto, postId);
-        return ResponseEntity.status(HttpStatus.OK).body(postRespDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 특정 게시물 수정", postRespDto), HttpStatus.OK);
     }
 
     // 관리자에 의한 전체 사용자 목록 조회
     @GetMapping("/user/all")
     @ResponseBody
-    public List<UserInfoDto> getAllUsers() {
-        return userService.findAllUsers();
+    public ResponseEntity<?> getAllUsers() {
+        List<UserInfoDto> dtoList = userService.findAllUsers();
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 전체 사용자 목록 조회", dtoList), HttpStatus.OK);
     }
 
     // 관리자에 의한 사용자 삭제 가능
     @DeleteMapping("/{username}/delete")
-    public ResponseEntity<UserRespDto.GeneralRespDto> deleteUserByAdmin(@PathVariable(name="username") String username) {
+    public ResponseEntity<?> deleteUserByAdmin(@PathVariable(name="username") String username) {
         UserRespDto.GeneralRespDto userRespDto = userService.deleteUserByAdmin(username);
-        return ResponseEntity.status(HttpStatus.OK).body(userRespDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 사용자 삭제", userRespDto), HttpStatus.OK);
     }
 
     // 관리자에 의한 사용자 수정 기능
     @PutMapping("/{username}/update")
-    public ResponseEntity<UserRespDto.GeneralRespDto> updateUserByAdmin(@PathVariable(name="username") String username, @RequestBody UserInfoDto dto) {
+    public ResponseEntity<?> updateUserByAdmin(@PathVariable(name="username") String username, @RequestBody UserInfoDto dto) {
         UserRespDto.GeneralRespDto userRespDto = userService.updateUserByAdmin(username, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(userRespDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 사용자 수정", userRespDto), HttpStatus.OK);
     }
 
     // 관리자에 의한 사용자 권한 (user -> admin)변경
     @PutMapping("/{username}/v1/authority")
-    public ResponseEntity<AuthorityDto> changeUserToAdmin(@PathVariable(name="username") String username) {
+    public ResponseEntity<?> changeUserToAdmin(@PathVariable(name="username") String username) {
         AuthorityDto authorityDto = userService.changeUserToAdmin(username);
-        return ResponseEntity.status(HttpStatus.OK).body(authorityDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자 권한 변경(user -> admin)", authorityDto), HttpStatus.OK);
     }
 
     // 관리자에 의한 사용자 권한 (admin -> user)변경
     @PutMapping("/{username}/v2/authority")
-    public ResponseEntity<AuthorityDto> changeAdminToUser(@PathVariable(name="username") String username) {
+    public ResponseEntity<?> changeAdminToUser(@PathVariable(name="username") String username) {
         AuthorityDto authorityDto = userService.changeAdminToUser(username);
-        return ResponseEntity.status(HttpStatus.OK).body(authorityDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자 권한 변경(admin -> user)", authorityDto), HttpStatus.OK);
     }
 }

@@ -38,7 +38,6 @@ public class PostLikeApiController { // 비지니스 로직 서비스 계층으�
 
         PostLikeDto postLikeDto = postLikeService.deleteLikeToPost(postId, userDetails.getUser(), pageable);
 
-
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 특정 게시물에 좋아요 취소", postLikeDto), HttpStatus.OK);
     }
 
