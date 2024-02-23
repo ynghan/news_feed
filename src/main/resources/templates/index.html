@@ -19,23 +19,17 @@
 <!--header-->
 <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
     <div id="user-profile">
-        <button id="profile-button" onclick="goIndexToFeed()" style="font-size: 20px; padding: 10px 20px;">내 피드</button>
+        <button id="profile-button" onclick="location.href ='/feed'" style="font-size: 20px; padding: 10px 20px;">내 피드</button>
     </div>
 </div>
 <!--/header-->
-
-
 </body>
 </html>
 <script>
-
     function goIndexToFeed() {
         $.ajax({
             url: '/feed',
             method: 'GET',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', Cookies.get('Authorization'));
-            },
             success: function(data) {
                 // 페이지 이동 처리
                 window.location.href ='/feed';

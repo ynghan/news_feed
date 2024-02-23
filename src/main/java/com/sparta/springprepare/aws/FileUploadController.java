@@ -5,8 +5,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sparta.springprepare.auth.LoginUser;
 import com.sparta.springprepare.dto.userDto.PhotoDto;
-import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,7 @@ public class FileUploadController {
     private String bucket;
 
     @PostMapping("/aws/upload")
-    public ResponseEntity<PhotoDto> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<PhotoDto> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal LoginUser loginUser) {
         try {
             String folderName = URLEncoder.encode("이미지 폴더", StandardCharsets.UTF_8);
             String fileName = file.getOriginalFilename();
@@ -44,7 +44,7 @@ public class FileUploadController {
             amazonS3Client.putObject(new PutObjectRequest(bucket, "이미지 폴더/" + fileName, file.getInputStream(), metaData)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             // 사용자 이미지 url 저장
-            PhotoDto photoDto = userService.postPhoto(fileUrl, userDetails.getUser());
+            PhotoDto photoDto = userService.postPhoto(fileUrl, loginUser.getUser());
 
             return ResponseEntity.ok(photoDto);
         } catch (IOException e) {
