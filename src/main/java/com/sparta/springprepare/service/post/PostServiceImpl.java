@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service;
+package com.sparta.springprepare.service.post;
 
 
 import com.sparta.springprepare.domain.Follow;
@@ -37,19 +37,14 @@ public class PostServiceImpl implements PostService {
     }
 
     // 특정 사용자 게시물 불러오기
-    public List<PostRespDto> getPosts(User user, Pageable pageable) {
+    public Page<PostRespDto> getPosts(User user, Pageable pageable) {
         Page<Post> postList = postRepository.findAllByUser(user, pageable);
-        List<PostRespDto> responseDtoList = new ArrayList<>();
-
-        for (Post post : postList) {
-            responseDtoList.add(new PostRespDto(post));
-        }
-        return responseDtoList;
+        return postList.map(PostRespDto::new);
     }
 
     // 조회할 사용자가 로그인 사용자가 팔로우한 사용자 목록에 포함되어 있어야 사용자의 게시물을 조회할 수 있다.
     @Transactional
-    public List<PostRespDto> getUserPosts(String followUsername, User loginUser, Pageable pageable) {
+    public Page<PostRespDto> getUserPosts(String followUsername, User loginUser, Pageable pageable) {
         Long findUserId = entityCheckUtil.checkUserByUsername(followUsername).getId();
         loginUser = entityCheckUtil.checkUserById(loginUser.getId());
 
@@ -58,11 +53,7 @@ public class PostServiceImpl implements PostService {
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 팔로우한 사용자가 아닙니다."));
 
         Page<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee(), pageable);
-        ArrayList<PostRespDto> responseDtoList = new ArrayList<>();
-        for (Post post : postList) {
-            responseDtoList.add(new PostRespDto(post));
-        }
-        return responseDtoList;
+        return postList.map(PostRespDto::new);
     }
 
     // 게시물 개수 불러오기

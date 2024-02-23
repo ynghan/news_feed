@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service;
+package com.sparta.springprepare.service.user;
 
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.PasswordHistory;

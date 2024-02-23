@@ -80,6 +80,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<PasswordHistory> passHis = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
     @Builder
     public User(String profile, String photoImage, String introduce, String username, String password, String email, UserRoleEnum role, LocalDateTime createAt) {
         this.profile = profile;

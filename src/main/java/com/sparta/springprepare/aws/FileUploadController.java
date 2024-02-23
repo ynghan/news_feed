@@ -7,7 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sparta.springprepare.dto.userDto.PhotoDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
-import com.sparta.springprepare.service.UserService;
+import com.sparta.springprepare.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

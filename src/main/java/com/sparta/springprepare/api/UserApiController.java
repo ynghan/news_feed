@@ -1,9 +1,10 @@
 package com.sparta.springprepare.api;
 
 import com.sparta.springprepare.domain.User;
+import com.sparta.springprepare.dto.ResponseDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.security.UserDetailsImpl;
-import com.sparta.springprepare.service.UserService;
+import com.sparta.springprepare.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,74 +43,84 @@ public class UserApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         User userPS = userService.signup(requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new UserRespDto.JoinRespDto(userPS));
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", new UserRespDto.JoinRespDto(userPS)), HttpStatus.CREATED);
     }
 
     // 로그인 사용자 회원 정보 불러오기
     @GetMapping("/info")
     @ResponseBody
-    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return userService.getUserInfo(userDetails.getUser());
+        UserInfoDto userInfoDto = userService.getUserInfo(userDetails.getUser());
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 회원 정보 불러오기 성공", userInfoDto), HttpStatus.OK);
     }
     // 로그인 사용자 회원 정보 수정하기
     @PostMapping("/info")
     @ResponseBody
-    public UserInfoDto postUserInfo(@RequestBody UserInfoDto userInfoDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> postUserInfo(@RequestBody UserInfoDto userInfoDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return userService.postUserInfo(userInfoDto, user);
+        UserInfoDto userInfoDtoPS = userService.postUserInfo(userInfoDto, user);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 회원 정보 수정하기 성공", userInfoDtoPS), HttpStatus.OK);
     }
     // 로그인 사용자 한줄 소개 불러오기
     @GetMapping("/info/introduce")
     @ResponseBody
-    public UserIntroduceDto getUserIntroduce(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getUserIntroduce(userDetails.getUser());
+    public ResponseEntity<?> getUserIntroduce(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserIntroduceDto userIntroduceDto = userService.getUserIntroduce(userDetails.getUser());
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 불러오기 성공", userIntroduceDto), HttpStatus.OK);
     }
     // 로그인 사용자 한줄 소개 수정하기
     @PostMapping("/info/introduce")
     @ResponseBody
-    public UserInfoDto postUserIntroduce(@RequestBody UserInfoDto dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> postUserIntroduce(@RequestBody UserInfoDto dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return userService.postUserIntroduce(dto, user);
+        UserInfoDto userInfoDto = userService.postUserIntroduce(dto, user);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", userInfoDto), HttpStatus.OK);
     }
     // 로그인 사용자의 팔로우한 사람 수 불러오기
     @GetMapping("/followee/count")
     @ResponseBody
-    public CountDto getUserFolloweeCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getFolloweeCount(userDetails.getUser());
+    public ResponseEntity<?> getUserFolloweeCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CountDto countDto = userService.getFolloweeCount(userDetails.getUser());
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자의 팔로우한 사람 수 불러오기 성공", countDto), HttpStatus.OK);
     }
     // 로그인 사용자의 팔로우한 사람 수 불러오기
     @GetMapping("/follower/count")
     @ResponseBody
-    public CountDto getUserFollowerCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getFollowerCount(userDetails.getUser());
+    public ResponseEntity<?> getUserFollowerCount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CountDto countDto = userService.getFollowerCount(userDetails.getUser());
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자의 팔로우한 사람 수 불러오기 성공", countDto), HttpStatus.OK);
     }
     // 로그인 사용자 프로필 사진 불러오기
     @GetMapping("/profile")
     @ResponseBody
-    public ProfileEncodingDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         ProfileEncodingDto profile = userService.getProfile(userDetails.getUser());
         log.info("Profile: {}", profile.getProfile());  // 로깅 추가
-        return profile;
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 프로필 사진 불러오기 성공", profile), HttpStatus.OK);
     }
     // 로그인 사용자 프로필 사진 등록하기
     @PostMapping("/profile")
     @ResponseBody
-    public ProfileDto postProfile(@RequestPart("file") MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.postProfile(file, userDetails.getUser());
+    public ResponseEntity<?> postProfile(@RequestPart("file") MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ProfileDto profileDto = userService.postProfile(file, userDetails.getUser());
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 프로필 사진 등록하기 성공", profileDto), HttpStatus.OK);
     }
 
     //이미지 조회
     @GetMapping("/{username}/image")
     @ResponseBody
-    public ProfileDto getUserPhotoUrl(@PathVariable(name="username") String username) {
-        return userService.getPhotoUrl(username);
+    public ResponseEntity<?> getUserPhotoUrl(@PathVariable(name="username") String username) {
+        ProfileDto photoDto = userService.getPhotoUrl(username);
+        return new ResponseEntity<>(new ResponseDto<>(1, "이미지 조회 성공", photoDto), HttpStatus.OK);
     }
 
     // 비밀번호 업데이트
     @PostMapping("/password")
-    public UserRespDto.GeneralRespDto changePassword(@RequestBody @Valid UserReqDto.PasswordReqDto dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> changePassword(@RequestBody @Valid UserReqDto.PasswordReqDto dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
-        return userService.changePassword(dto, loginUser);
+        UserRespDto.GeneralRespDto generalRespDto = userService.changePassword(dto, loginUser);
+        return new ResponseEntity<>(new ResponseDto<>(1, "비밀번호 업데이트 성공", generalRespDto), HttpStatus.OK);
     }
 }

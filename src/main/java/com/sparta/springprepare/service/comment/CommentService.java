@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service;
+package com.sparta.springprepare.service.comment;
 
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;

@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service;
+package com.sparta.springprepare.service.follow;
 
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
@@ -12,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
@@ -25,28 +22,18 @@ public class FollowServiceImpl implements FollowService {
 
 
     // 특정 사용자의 팔로우 리스트 조회하기
-    public List<FollowDto> findFollowListOfUser(String username) {
+    public Page<FollowDto> findFollowListOfUser(String username, Pageable pageable) {
 
-        List<Follow> findFollowerEntities = userRepository.findWithFollowersByUsername(username);
-        ArrayList<FollowDto> dtoList = new ArrayList<>();
+        Page<Follow> findFollowerEntities = userRepository.findWithFollowersByUsername(username, pageable);
 
-        for (Follow findFollowerEntity : findFollowerEntities) {
-            User followee = findFollowerEntity.getFollowee();
-            dtoList.add(new FollowDto(followee));
-        }
-        return dtoList;
+        return findFollowerEntities.map(FollowDto::new);
     }
 
     // 특정 사용자의 팔로위 리스트 조회하기
-    public List<FollowDto> findFolloweeListOfUser(String username, Pageable pageable) {
+    public Page<FollowDto> findFolloweeListOfUser(String username, Pageable pageable) {
         Page<Follow> findFolloweeEntities = userRepository.findWithFolloweesByUsername(username, pageable);
-        ArrayList<FollowDto> dtoList = new ArrayList<>();
 
-        for (Follow findFollowEntity : findFolloweeEntities) {
-            User follower = findFollowEntity.getFollower();
-            dtoList.add(new FollowDto(follower));
-        }
-        return dtoList;
+        return findFolloweeEntities.map(FollowDto::new);
     }
 
     // 로그인 사용자가 특정 사용자를 팔로우 목록에 추가.

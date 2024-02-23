@@ -1,5 +1,6 @@
 package com.sparta.springprepare.dto;
 
+import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +15,9 @@ public class FollowDto {
 
     public FollowDto(User findFollowUser) {
         this.username = findFollowUser.getUsername();
+    }
+
+    public FollowDto(Follow follow) {
+        this.username = follow.getFollower().getUsername();
     }
 }

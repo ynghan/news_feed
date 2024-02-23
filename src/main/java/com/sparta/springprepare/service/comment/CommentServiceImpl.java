@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service;
+package com.sparta.springprepare.service.comment;
 
 import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.Post;
@@ -23,6 +23,9 @@ public class CommentServiceImpl implements CommentService {
     private final EntityCheckUtil entityCheckUtil;
 
     // 특정 게시판의 댓글 목록 조회하기
+    // Post postPS = entityCheckUtil.checkPost(postId);
+    // Page<Comment> commentList = commetRepository.findByPost(postPS);
+    // 리팩터링하기
     @Transactional
     public List<CommentRespDto> findCommentOfPost(Long postId) {
         List<Comment> commentList = entityCheckUtil.checkPost(postId).getComments();

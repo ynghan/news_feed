@@ -5,16 +5,15 @@ import com.sparta.springprepare.dto.postDto.PostReqDto;
 import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
-import com.sparta.springprepare.service.PostService;
+import com.sparta.springprepare.service.post.PostService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,7 +35,7 @@ public class PostApiController {
 
     // 로그인 사용자 게시물 조회하기
     @GetMapping("/posts")
-    public List<PostRespDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    public Page<PostRespDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
     @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
         // 응답 보내기
         return postService.getPosts(userDetails.getUser(), pageable);
@@ -44,7 +43,7 @@ public class PostApiController {
 
     // 특정 사용자 게시물 조회하기 -> 조회 권한 체크 하기
     @GetMapping("/{followUsername}/posts")
-    public List<PostRespDto> getUserPosts(@PathVariable(name="followUsername") String followUsername, @AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    public Page<PostRespDto> getUserPosts(@PathVariable(name="followUsername") String followUsername, @AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
     @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
         return postService.getUserPosts(followUsername, userDetails.getUser(), pageable);
     }

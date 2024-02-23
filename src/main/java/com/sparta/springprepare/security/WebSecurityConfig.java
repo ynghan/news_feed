@@ -3,6 +3,7 @@ package com.sparta.springprepare.security;
 import com.sparta.springprepare.jwt.JwtAuthenticationFilter;
 import com.sparta.springprepare.jwt.JwtAuthorizationFilter;
 import com.sparta.springprepare.jwt.JwtUtil;
+import com.sparta.springprepare.util.CustomResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -65,6 +66,12 @@ public class WebSecurityConfig {
                         .requestMatchers("/","/user/signup", "/user/login", "/api/user/signup").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
+
+        http.exceptionHandling(customizer -> customizer
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            CustomResponseUtil.unAthentication(response, "로그인을 진행해 주세요");
+                        })
+                );
 
         // 로그인 사용
 //        http.formLogin(AbstractHttpConfigurer::disable);

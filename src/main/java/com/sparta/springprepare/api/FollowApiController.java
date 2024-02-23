@@ -3,15 +3,14 @@ package com.sparta.springprepare.api;
 
 import com.sparta.springprepare.dto.FollowDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
-import com.sparta.springprepare.service.FollowService;
+import com.sparta.springprepare.service.follow.FollowService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -25,27 +24,29 @@ public class FollowApiController {
 
     // 특정 사용자(username)의 "팔로우" 목록 조회
     @GetMapping("/{username}/follower")
-    public List<FollowDto> findFollowListOfUser(@PathVariable("username") String username) {
-        return followService.findFollowListOfUser(username);
+    public Page<FollowDto> findFollowListOfUser(@PathVariable("username") String username, @PageableDefault(value=10)
+    @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
+        return followService.findFollowListOfUser(username, pageable);
     }
 
 
     // 특정 사용자(username)의 "팔로위" 목록 조회
     @GetMapping("/{username}/followee")
-    public List<FollowDto> findFolloweeUser(@PathVariable("username") String username, @PageableDefault(value=10)
+    public Page<FollowDto> findFolloweeUser(@PathVariable("username") String username, @PageableDefault(value=10)
     @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
         return followService.findFolloweeListOfUser(username, pageable);
     }
 
     // 로그인 사용자의 "팔로우" 목록 조회
     @GetMapping("/follower")
-    public List<FollowDto> findFollowListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return followService.findFollowListOfUser(userDetails.getUsername());
+    public Page<FollowDto> findFollowListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
+        return followService.findFollowListOfUser(userDetails.getUsername(), pageable);
     }
 
     // 로그인 사용자의 "팔로위" 목록 조회
     @GetMapping("/followee")
-    public List<FollowDto> findFolloweeListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    public Page<FollowDto> findFolloweeListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
     @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
         return followService.findFolloweeListOfUser(userDetails.getUser().getUsername(), pageable);
     }

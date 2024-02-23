@@ -4,7 +4,7 @@ package com.sparta.springprepare.api;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.security.UserDetailsImpl;
-import com.sparta.springprepare.service.CommentService;
+import com.sparta.springprepare.service.comment.CommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

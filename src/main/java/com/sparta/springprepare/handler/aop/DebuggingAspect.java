@@ -15,8 +15,8 @@ public class DebuggingAspect {
 
 
     // 대상 메소드 선택 : UserService#signup()
-    @Pointcut("execution(* com.sparta.springprepare.service.UserService.*(..))")
-//    @Pointcut("execution(* com.sparta.springprepare.service.UserService.signup())")
+    @Pointcut("execution(* com.sparta.springprepare.service.user.UserService.*(..))")
+//    @Pointcut("execution(* com.sparta.springprepare.service.user.UserService.signup())")
     private void cut() {}
 
     // 실행 시점 설정: cut()의 대상이 수행되기 이전
