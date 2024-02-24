@@ -5,7 +5,9 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.ResponseDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.service.user.UserService;
+import com.sparta.springprepare.util.EntityCheckUtil;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +22,15 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserApiController {
 
     private final UserService userService;
-
-    public UserApiController(UserService userService) {
-        this.userService = userService;
-    }
-
+    private final EntityCheckUtil entityCheckUtil;
 
     // 회원가입
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserReqDto.JoinReqDto requestDto, BindingResult bindingResult) { // ajax로 로그인하기 때문에 @RequestBody
         log.info(requestDto.getUsername());
         // Validation 예외처리
@@ -73,10 +72,10 @@ public class UserApiController {
     // 로그인 사용자 한줄 소개 수정하기
     @PostMapping("/info/introduce")
     @ResponseBody
-    public ResponseEntity<?> postUserIntroduce(@RequestBody UserInfoDto dto, @AuthenticationPrincipal LoginUser loginUser) {
-        User user = loginUser.getUser();
-        UserInfoDto userInfoDto = userService.postUserIntroduce(dto, user);
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", userInfoDto), HttpStatus.OK);
+    public ResponseEntity<?> postUserIntroduce(@RequestBody UserIntroduceDto dto, @AuthenticationPrincipal LoginUser loginUser) {
+        User userPS = entityCheckUtil.checkUserById(loginUser.getUser().getId());
+        userService.postUserIntroduce(dto.getIntroduce(), userPS);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", null), HttpStatus.OK);
     }
     // 로그인 사용자의 팔로우한 사람 수 불러오기
     @GetMapping("/followee/count")

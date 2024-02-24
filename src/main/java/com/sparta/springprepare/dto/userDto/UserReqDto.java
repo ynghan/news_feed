@@ -68,4 +68,5 @@ public class UserReqDto {
         @NotBlank
         private String confirmNewPassword;
     }
+
 }

@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoDto getUserInfo(User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
+        User findUser = entityCheckUtil.checkUserById(user.getId());
         if(findUser != null) {
             return new UserInfoDto(findUser);
         }
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoDto postUserInfo(UserInfoDto dto, User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
+        User findUser = entityCheckUtil.checkUserById(user.getId());
         findUser.patch(dto);
         userRepository.save(findUser);
         return new UserInfoDto(findUser);
@@ -152,10 +152,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoDto postUserIntroduce(UserInfoDto dto, User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
-        findUser.patch(dto);
-        return new UserInfoDto(findUser);
+    public void postUserIntroduce(String introduce, User user) {
+        User findUserPS = entityCheckUtil.checkUserByUsername(user.getUsername());
+        findUserPS.setIntroduce(introduce);
+        userRepository.save(findUserPS);
     }
 
     @Override

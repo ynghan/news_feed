@@ -34,7 +34,7 @@ public interface UserService {
     UserIntroduceDto getUserIntroduce(User user);
 
     // 사용자 정보(introduce) 등록
-    UserInfoDto postUserIntroduce(UserInfoDto dto, User user);
+    void postUserIntroduce(String introduce, User user);
 
     // 사용자 이름으로 사진 경로 찾기 <-
     ProfileDto getPhotoUrl(String username);
