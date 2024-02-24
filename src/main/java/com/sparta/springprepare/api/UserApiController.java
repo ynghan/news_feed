@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserApiController {
 
     private final UserService userService;
@@ -31,7 +31,7 @@ public class UserApiController {
 
 
     // 회원가입
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserReqDto.JoinReqDto requestDto, BindingResult bindingResult) { // ajax로 로그인하기 때문에 @RequestBody
         log.info(requestDto.getUsername());
         // Validation 예외처리
