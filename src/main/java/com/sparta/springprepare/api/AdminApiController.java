@@ -1,6 +1,5 @@
 package com.sparta.springprepare.api;
 
-import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.dto.ResponseDto;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
@@ -13,17 +12,15 @@ import com.sparta.springprepare.service.comment.CommentService;
 import com.sparta.springprepare.service.comment.CommentServiceImpl;
 import com.sparta.springprepare.service.post.PostService;
 import com.sparta.springprepare.service.user.UserService;
-import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Secured(UserRoleEnum.Authority.ADMIN)
+
 @RestController
-@RequiredTypes("/api/admin")
+@RequestMapping("/api/admin")
 public class AdminApiController {
 
     private final CommentService commentService;

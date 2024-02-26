@@ -87,7 +87,8 @@ public class User {
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @Builder
-    public User(String profile, String photoImage, String introduce, String username, String password, String email, UserRoleEnum role, LocalDateTime createAt) {
+    public User(Long id, String profile, String photoImage, String introduce, String username, String password, String email, UserRoleEnum role, LocalDateTime createAt) {
+        this.id = id;
         this.profile = profile;
         this.photoImage = photoImage;
         this.introduce = introduce;

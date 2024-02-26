@@ -1,11 +1,12 @@
 package com.sparta.springprepare.service.comment;
 
+
+import com.sparta.springprepare.auth.LoginUser;
 import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.repository.comment.CommentRepository;
-import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,12 +38,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     // 특정 게시판의 댓글 생성
-    public CommentRespDto createCommentOfPost(Long postId, CommentReqDto dto, UserDetailsImpl userDetails) {
+    public CommentRespDto createCommentOfPost(Long postId, CommentReqDto dto, LoginUser loginUser) {
 
         Post findPost = entityCheckUtil.checkPost(postId);
 
         Comment comment = new Comment();
-        comment.patch(dto, findPost, userDetails.getUser());
+        comment.patch(dto, findPost, loginUser.getUser());
 
         Comment savedComment = commentRepository.save(comment);
 
@@ -50,9 +51,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public CommentRespDto updateCommentOfPost(Long commentId, CommentReqDto dto, UserDetailsImpl userDetails) {
+    public CommentRespDto updateCommentOfPost(Long commentId, CommentReqDto dto, LoginUser loginUser) {
         Comment findComment = entityCheckUtil.checkCommentById(commentId);
-        if(!Objects.equals(findComment.getUser().getUsername(), userDetails.getUser().getUsername())) {
+        if(!Objects.equals(findComment.getUser().getUsername(), loginUser.getUser().getUsername())) {
             throw new IllegalArgumentException("등록한 댓글이 아닙니다.");
         }
         findComment.setContent(dto.getContent());
@@ -60,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentRespDto(savedComment);
     }
 
-    public CommentRespDto deleteCommentOfPost(Long commentId, UserDetailsImpl userDetails) {
+    public CommentRespDto deleteCommentOfPost(Long commentId, LoginUser loginUser) {
         Comment findComment = entityCheckUtil.checkCommentById(commentId);
         commentRepository.delete(findComment);
         return new CommentRespDto(findComment);

@@ -26,8 +26,8 @@
 
             <div class="login-id-label">E-mail</div>
             <input type="text" name="email" placeholder="E-mail" class="login-input-box">
-<!--            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자-->
-<!--            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">-->
+            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자
+            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">
             <button id="login-id-submit" type="button">회원 가입</button>
         </form>
 </div>
@@ -54,7 +54,9 @@
             var formData = {
                 username: $('input[name=username]').val(),
                 password: $('input[name=password]').val(),
-                email: $('input[name=email]').val()
+                email: $('input[name=email]').val(),
+                admin: document.getElementById('admin-check').checked,
+                adminToken: $('input[name=adminToken]').val()
             };
 
             $.ajax({

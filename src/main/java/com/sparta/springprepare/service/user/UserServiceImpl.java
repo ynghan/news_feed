@@ -33,41 +33,40 @@ public class UserServiceImpl implements UserService {
     private final EntityCheckUtil entityCheckUtil;
 
     // ADMIN_TOKEN
-    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+//    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final String ADMIN_TOKEN = "1111";
 
     // 회원가입
     @Override
-    public User signup(UserReqDto.JoinReqDto requestDto) {
-        String username = requestDto.getUsername();
-        String password = passwordEncoder.encode(requestDto.getPassword());
+    public UserRespDto.JoinRespDto signup(UserReqDto.JoinReqDto joinReqDto) {
+        String username = joinReqDto.getUsername();
+        String password = passwordEncoder.encode(joinReqDto.getPassword());
 
         // 회원 중복 확인
-        Optional<User> checkUsername = userRepository.findByUsername(username);
-        if (checkUsername.isPresent()) {
+        Optional<User> checkUser = userRepository.findByUsername(username);
+        if (checkUser.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
 
         // email 중복확인
-        String email = requestDto.getEmail();
+        String email = joinReqDto.getEmail();
         Optional<User> checkEmail = userRepository.findByEmail(email);
         if (checkEmail.isPresent()) {
             throw new IllegalArgumentException("중복된 Email 입니다.");
         }
 
         // 사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) { // JoinReqDto의 admin 필드가 true일 경우
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+        if (joinReqDto.isAdmin()) { // JoinReqDto의 admin 필드가 true일 경우
+            if (!ADMIN_TOKEN.equals(joinReqDto.getAdminToken())) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
-            role = UserRoleEnum.ADMIN;
         }
 
         // 사용자 등록
-        User user = requestDto.toEntity(passwordEncoder);
+        User user = joinReqDto.toEntity(passwordEncoder);
         User userPS = userRepository.save(user);
 
-        return userPS;
+        return new UserRespDto.JoinRespDto(userPS);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoDto getUserInfo(User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
+        User findUser = entityCheckUtil.checkUserById(user.getId());
         if(findUser != null) {
             return new UserInfoDto(findUser);
         }
@@ -140,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoDto postUserInfo(UserInfoDto dto, User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
+        User findUser = entityCheckUtil.checkUserById(user.getId());
         findUser.patch(dto);
         userRepository.save(findUser);
         return new UserInfoDto(findUser);
@@ -152,10 +151,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoDto postUserIntroduce(UserInfoDto dto, User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
-        findUser.patch(dto);
-        return new UserInfoDto(findUser);
+    public void postUserIntroduce(String introduce, User user) {
+        User findUserPS = entityCheckUtil.checkUserByUsername(user.getUsername());
+        findUserPS.setIntroduce(introduce);
+        userRepository.save(findUserPS);
     }
 
     @Override

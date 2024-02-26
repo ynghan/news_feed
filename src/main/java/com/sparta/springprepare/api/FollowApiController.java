@@ -1,9 +1,9 @@
 package com.sparta.springprepare.api;
 
 
+import com.sparta.springprepare.auth.LoginUser;
 import com.sparta.springprepare.dto.FollowDto;
 import com.sparta.springprepare.dto.ResponseDto;
-import com.sparta.springprepare.security.UserDetailsImpl;
 import com.sparta.springprepare.service.follow.FollowService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,31 +44,31 @@ public class FollowApiController {
 
     // 로그인 사용자의 "팔로우" 목록 조회
     @GetMapping("/follower")
-    public ResponseEntity<?> findFollowListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    public ResponseEntity<?> findFollowListOfMine(@AuthenticationPrincipal LoginUser loginUser, @PageableDefault(value=10)
     @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<FollowDto> dtoPage = followService.findFollowListOfUser(userDetails.getUsername(), pageable);
+        Page<FollowDto> dtoPage = followService.findFollowListOfUser(loginUser.getUsername(), pageable);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 팔로우 목록 확인", dtoPage), HttpStatus.OK);
     }
 
     // 로그인 사용자의 "팔로위" 목록 조회
     @GetMapping("/followee")
-    public ResponseEntity<?> findFolloweeListOfMine(@AuthenticationPrincipal UserDetailsImpl userDetails, @PageableDefault(value=10)
+    public ResponseEntity<?> findFolloweeListOfMine(@AuthenticationPrincipal LoginUser loginUser, @PageableDefault(value=10)
     @SortDefault(sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<FollowDto> dtoPage = followService.findFolloweeListOfUser(userDetails.getUser().getUsername(), pageable);
+        Page<FollowDto> dtoPage = followService.findFolloweeListOfUser(loginUser.getUser().getUsername(), pageable);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 팔로워 목록 확인", dtoPage), HttpStatus.OK);
     }
 
     // 로그인 사용자가 특정 사용자(username)를 팔로우 -> 게시물의 조회 권한을 얻을 수 있다.
     @PostMapping("/{username}/follow")
-    public ResponseEntity<?> addFollower(@PathVariable(name="username") String followUsername, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        FollowDto followDto = followService.addFollower(followUsername, userDetails.getUser());
+    public ResponseEntity<?> addFollower(@PathVariable(name="username") String followUsername, @AuthenticationPrincipal LoginUser loginUser) {
+        FollowDto followDto = followService.addFollower(followUsername, loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(1, "", followDto), HttpStatus.OK);
     }
 
     // 로그인 사용자가 특정 사용자(username)를 팔로우 취소
     @DeleteMapping("/{username}/follow")
-    public ResponseEntity<?> deleteFolloweeUser(@PathVariable(name="username") String deleteUsername, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        FollowDto followDto = followService.deleteFollowee(deleteUsername, userDetails.getUser());
+    public ResponseEntity<?> deleteFolloweeUser(@PathVariable(name="username") String deleteUsername, @AuthenticationPrincipal LoginUser loginUser) {
+        FollowDto followDto = followService.deleteFollowee(deleteUsername, loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(1, "", followDto), HttpStatus.OK);
     }
 

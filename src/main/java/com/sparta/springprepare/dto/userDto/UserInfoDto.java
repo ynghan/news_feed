@@ -23,11 +23,4 @@ public class UserInfoDto {
         this.introduce = user.getIntroduce();
         this.nickname = user.getNickname();
     }
-
-    public UserInfoDto(String introduce) {
-        this.username = null;
-        this.introduce = introduce;
-        this.nickname = null;
-        this.role = null;
-    }
 }

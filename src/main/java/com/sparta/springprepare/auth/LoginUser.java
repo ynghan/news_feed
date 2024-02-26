@@ -1,23 +1,27 @@
-package com.sparta.springprepare.security;
+package com.sparta.springprepare.auth;
 
 import com.sparta.springprepare.domain.User;
-import com.sparta.springprepare.domain.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-// UserDetails 클래스 기능을 커스텀하는 클래스
-// 특정 사용자의 토큰 정보를 조회하는 클래스
+
 @Getter
 @RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+public class LoginUser implements UserDetails {
 
     private final User user;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(() -> "ROLE_" + user.getRole());
+        return authorities;
+    }
 
     @Override
     public String getPassword() {
@@ -27,17 +31,6 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return user.getUsername();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
-        String authority = role.getAuthority();
-
-        SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority(authority);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(adminAuthority);
-        return authorities;
     }
 
     @Override
