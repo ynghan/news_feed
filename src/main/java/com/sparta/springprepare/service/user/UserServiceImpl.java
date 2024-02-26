@@ -7,7 +7,6 @@ import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
-import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +29,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordHistoryRepository passwordHistoryRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EntityCheckUtil entityCheckUtil;
 
     // ADMIN_TOKEN
 //    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -130,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoDto getUserInfo(User user) {
-        User findUser = entityCheckUtil.checkUserById(user.getId());
+        User findUser = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         if(findUser != null) {
             return new UserInfoDto(findUser);
         }
@@ -139,7 +137,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoDto postUserInfo(UserInfoDto dto, User user) {
-        User findUser = entityCheckUtil.checkUserById(user.getId());
+        User findUser = checkUserById(user.getId());
         findUser.patch(dto);
         userRepository.save(findUser);
         return new UserInfoDto(findUser);
@@ -152,21 +150,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void postUserIntroduce(String introduce, User user) {
-        User findUserPS = entityCheckUtil.checkUserByUsername(user.getUsername());
+        User findUserPS = checkUserById(user.getId());
         findUserPS.setIntroduce(introduce);
         userRepository.save(findUserPS);
     }
 
     @Override
     public ProfileDto getPhotoUrl(String username) {
-        User findUser = entityCheckUtil.checkUserByUsername(username);
+        User findUser = checkUserByUsername(username);
         String photoImage = findUser.getPhotoImage();
         return new ProfileDto(photoImage);
     }
 
     @Override
     public PhotoDto postPhoto(String photoUrl, User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
+        User findUser = checkUserByUsername(user.getUsername());
         findUser.setPhotoImage(photoUrl);
         User savedUser = userRepository.save(findUser);
         return new PhotoDto(savedUser);
@@ -224,7 +222,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(loginUser);
 
         // 그리고 PasswordHistory 엔티티 개수가 3이 되면 가장 먼저 생성된 엔티티를 제거한다.
-        loginUser = entityCheckUtil.checkUserByUsername(loginUser.getUsername());
+        loginUser = checkUserByUsername(loginUser.getUsername());
 
         if(loginUser.getPassHis().size() == 3) {
             PasswordHistory firstPassHis = loginUser.getPassHis().stream()
@@ -239,14 +237,14 @@ public class UserServiceImpl implements UserService {
     // 관리자에 의한 사용자 삭제
     @Override
     public UserRespDto.GeneralRespDto deleteUserByAdmin(String username) {
-        User deleteUser = entityCheckUtil.checkUserByUsername(username);
+        User deleteUser = checkUserByUsername(username);
         userRepository.delete(deleteUser);
         return new UserRespDto.GeneralRespDto(deleteUser);
     }
 
     @Override
     public UserRespDto.GeneralRespDto updateUserByAdmin(String username, UserInfoDto dto) {
-        User updateUser = entityCheckUtil.checkUserByUsername(username);
+        User updateUser = checkUserByUsername(username);
         updateUser.patch(dto);
         User userPS = userRepository.save(updateUser);
         return new UserRespDto.GeneralRespDto(userPS);
@@ -255,7 +253,7 @@ public class UserServiceImpl implements UserService {
     // 이미 Admin 권할일 때, 예외 처리
     @Override
     public AuthorityDto changeUserToAdmin(String username) {
-        User findUser = entityCheckUtil.checkUserByUsername(username);
+        User findUser = checkUserByUsername(username);
         findUser.setRole(UserRoleEnum.ADMIN);
         userRepository.save(findUser);
 
@@ -265,12 +263,19 @@ public class UserServiceImpl implements UserService {
     // 이미 User 권한일 때, 예외 처리
     @Override
     public AuthorityDto changeAdminToUser(String username) {
-        User findUser = entityCheckUtil.checkUserByUsername(username);
+        User findUser = checkUserByUsername(username);
         findUser.setRole(UserRoleEnum.USER);
         userRepository.save(findUser);
 
         return new AuthorityDto(findUser);
     }
 
+    private User checkUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private User checkUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
 
 }

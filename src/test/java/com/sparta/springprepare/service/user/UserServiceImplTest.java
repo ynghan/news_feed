@@ -60,6 +60,5 @@ class UserServiceImplTest extends DummyObject {
 
         //then
         Assertions.assertThat(joinRespDto.getUsername()).isEqualTo("dudgks56");
-
     }
 }

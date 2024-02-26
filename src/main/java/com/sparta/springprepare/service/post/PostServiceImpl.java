@@ -8,7 +8,7 @@ import com.sparta.springprepare.dto.postDto.PostReqDto;
 import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.repository.post.PostRepository;
-import com.sparta.springprepare.util.EntityCheckUtil;
+import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +23,12 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final EntityCheckUtil entityCheckUtil;
+    private final UserRepository userRepository;
 
 
     // 사용자 게시물 등록하기
     public PostRespDto createPost(PostReqDto requestDto, Long userId) {
-        User findUser = entityCheckUtil.checkUserById(userId);
+        User findUser = checkUserById(userId);
         Post post = new Post();
         post.setContent(requestDto.getContent());
         post.setUser(findUser);
@@ -45,8 +45,8 @@ public class PostServiceImpl implements PostService {
     // 조회할 사용자가 로그인 사용자가 팔로우한 사용자 목록에 포함되어 있어야 사용자의 게시물을 조회할 수 있다.
     @Transactional
     public Page<PostRespDto> getUserPosts(String followUsername, User loginUser, Pageable pageable) {
-        Long findUserId = entityCheckUtil.checkUserByUsername(followUsername).getId();
-        loginUser = entityCheckUtil.checkUserById(loginUser.getId());
+        Long findUserId = checkUserByUsername(followUsername).getId();
+        loginUser = checkUserById(loginUser.getId());
 
         Follow findFollowEntity = loginUser.getFollowers()
                 .stream().filter(follow -> follow.getFollowee().getId().equals(findUserId))
@@ -67,8 +67,8 @@ public class PostServiceImpl implements PostService {
 
     // 특정 게시물 수정하기
     public PostRespDto updatePost(Long postId, PostReqDto requestDto, User user) {
-        User findUser = entityCheckUtil.checkUserByUsername(user.getUsername());
-        Post findPost = entityCheckUtil.checkPost(postId);
+        User findUser = checkUserByUsername(user.getUsername());
+        Post findPost = checkPost(postId);
         if(findUser.getPosts().stream().anyMatch(post -> post.equals(findPost))) {
             findPost.setContent(requestDto.getContent());
             postRepository.save(findPost);
@@ -90,16 +90,29 @@ public class PostServiceImpl implements PostService {
 
     // 특정 게시물 삭제
     public PostRespDto deletePost(Long postId) {
-        Post deletePost = entityCheckUtil.checkPost(postId);
+        Post deletePost = checkPost(postId);
         postRepository.delete(deletePost);
         return new PostRespDto(deletePost);
     }
 
     // 특정 게시물 수정
     public PostRespDto updatePost(PostReqDto dto, Long postId) {
-        Post updatePost = entityCheckUtil.checkPost(postId);
+        Post updatePost = checkPost(postId);
         updatePost.setContent(dto.getContent());
         Post savedPost = postRepository.save(updatePost);
         return new PostRespDto(savedPost);
+    }
+
+
+    private User checkUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private User checkUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private Post checkPost(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
     }
 }

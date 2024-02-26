@@ -7,8 +7,10 @@ import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.repository.comment.CommentRepository;
-import com.sparta.springprepare.util.EntityCheckUtil;
+import com.sparta.springprepare.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,17 +23,15 @@ import java.util.Objects;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final EntityCheckUtil entityCheckUtil;
+    private final PostRepository postRepository;
 
     // 특정 게시판의 댓글 목록 조회하기
-    // Post postPS = entityCheckUtil.checkPost(postId);
-    // Page<Comment> commentList = commetRepository.findByPost(postPS);
-    // 리팩터링하기
     @Transactional
-    public List<CommentRespDto> findCommentOfPost(Long postId) {
-        List<Comment> commentList = entityCheckUtil.checkPost(postId).getComments();
+    public List<CommentRespDto> findCommentOfPost(Long postId, Pageable pageable) {
+        Post postPS = checkPost(postId);
+        Page<Comment> comments = commentRepository.findByPost(postPS, pageable);
         List<CommentRespDto> resDtoList = new ArrayList<>();
-        for (Comment comment : commentList) {
+        for (Comment comment : comments) {
             resDtoList.add(new CommentRespDto(comment));
         }
         return resDtoList;
@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     // 특정 게시판의 댓글 생성
     public CommentRespDto createCommentOfPost(Long postId, CommentReqDto dto, LoginUser loginUser) {
 
-        Post findPost = entityCheckUtil.checkPost(postId);
+        Post findPost = checkPost(postId);
 
         Comment comment = new Comment();
         comment.patch(dto, findPost, loginUser.getUser());
@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     public CommentRespDto updateCommentOfPost(Long commentId, CommentReqDto dto, LoginUser loginUser) {
-        Comment findComment = entityCheckUtil.checkCommentById(commentId);
+        Comment findComment = checkCommentById(commentId);
         if(!Objects.equals(findComment.getUser().getUsername(), loginUser.getUser().getUsername())) {
             throw new IllegalArgumentException("등록한 댓글이 아닙니다.");
         }
@@ -62,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public CommentRespDto deleteCommentOfPost(Long commentId, LoginUser loginUser) {
-        Comment findComment = entityCheckUtil.checkCommentById(commentId);
+        Comment findComment = checkCommentById(commentId);
         commentRepository.delete(findComment);
         return new CommentRespDto(findComment);
     }
@@ -77,16 +77,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public CommentRespDto deleteComment(Long commentId) {
-        Comment findComment = entityCheckUtil.checkCommentById(commentId);
+        Comment findComment = checkCommentById(commentId);
         commentRepository.delete(findComment);
         return new CommentRespDto(findComment);
     }
 
     public CommentRespDto updateComment(CommentReqDto requestDto, Long commentId) {
-        Comment findComment = entityCheckUtil.checkCommentById(commentId);
+        Comment findComment = checkCommentById(commentId);
         findComment.setContent(requestDto.getContent());
         return new CommentRespDto(findComment);
     }
 
 
+    public Comment checkCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+    }
+
+    public Post checkPost(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+    }
 }

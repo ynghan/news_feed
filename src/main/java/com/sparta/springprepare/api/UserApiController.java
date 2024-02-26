@@ -5,7 +5,6 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.ResponseDto;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.service.user.UserService;
-import com.sparta.springprepare.util.EntityCheckUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,6 @@ import java.util.List;
 public class UserApiController {
 
     private final UserService userService;
-    private final EntityCheckUtil entityCheckUtil;
 
     // 회원가입
     @PostMapping("/signup")
@@ -73,8 +71,7 @@ public class UserApiController {
     @PostMapping("/info/introduce")
     @ResponseBody
     public ResponseEntity<?> postUserIntroduce(@RequestBody UserIntroduceDto dto, @AuthenticationPrincipal LoginUser loginUser) {
-        User userPS = entityCheckUtil.checkUserById(loginUser.getUser().getId());
-        userService.postUserIntroduce(dto.getIntroduce(), userPS);
+        userService.postUserIntroduce(dto.getIntroduce(), loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", null), HttpStatus.OK);
     }
     // 로그인 사용자의 팔로우한 사람 수 불러오기

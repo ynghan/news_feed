@@ -5,7 +5,6 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.FollowDto;
 import com.sparta.springprepare.repository.FollowRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
-import com.sparta.springprepare.util.EntityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ public class FollowServiceImpl implements FollowService {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
-    private final EntityCheckUtil entityCheckUtil;
 
 
     // 특정 사용자의 팔로우 리스트 조회하기
@@ -39,8 +37,8 @@ public class FollowServiceImpl implements FollowService {
     // 로그인 사용자가 특정 사용자를 팔로우 목록에 추가.
     @Transactional
     public FollowDto addFollower(String followeeUsername, User loginUser) {
-        User followeeUser = entityCheckUtil.checkUserByUsername(followeeUsername);
-        loginUser = entityCheckUtil.checkUserById(loginUser.getId());
+        User followeeUser = checkUserByUsername(followeeUsername);
+        loginUser = checkUserById(loginUser.getId());
 
         boolean alreadyFollowing = loginUser.getFollowers().stream()
                 .anyMatch(f -> f.getFollowee().getUsername().equals(followeeUsername));
@@ -56,7 +54,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional
     public FollowDto deleteFollowee(String followeeUsername, User loginUser) {
-        loginUser = entityCheckUtil.checkUserById(loginUser.getId());
+        loginUser = checkUserById(loginUser.getId());
         Follow follow = loginUser.getFollowers().stream() // 포함 유무 검사
                 .filter(f -> f.getFollowee().getUsername().equals(followeeUsername))
                 .findFirst()
@@ -67,5 +65,13 @@ public class FollowServiceImpl implements FollowService {
         return new FollowDto(follow.getFollowee());
     }
 
+
+    private User checkUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private User checkUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
 
 }

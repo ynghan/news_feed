@@ -6,6 +6,7 @@ import com.sparta.springprepare.dto.ResponseDto;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.service.comment.CommentService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,8 +26,8 @@ public class CommentApiController {
 
     // 특정 사용자의 게시글의 댓글 조회하기
     @GetMapping("/{postId}/comment")
-    public ResponseEntity<?> readCommentsOfPost(@PathVariable("postId") Long postId) {
-        List<CommentRespDto> commentRespDtoList = commentService.findCommentOfPost(postId);
+    public ResponseEntity<?> readCommentsOfPost(@PathVariable("postId") Long postId, Pageable pageable) {
+        List<CommentRespDto> commentRespDtoList = commentService.findCommentOfPost(postId, pageable);
         return new ResponseEntity<>(new ResponseDto<>(1, "특정 사용자의 게시글의 댓글 조회하기 성공", commentRespDtoList), HttpStatus.OK);
 
     }
