@@ -55,7 +55,7 @@
 
         $.ajax({
             type: "POST",
-            url: `/api/user/login`,
+            url: `/api/login`,
             contentType: "application/json",
             data: JSON.stringify({username: username, password: password}),
         })
@@ -68,7 +68,7 @@
                 jqXHR.setRequestHeader('Authorization', token);
             });
             // 현재 페이지를 메인 페이지로 이동
-            window.location.href = host
+
         })
         .fail(function (jqXHR, textStatus) {
             alert("Login Fail");

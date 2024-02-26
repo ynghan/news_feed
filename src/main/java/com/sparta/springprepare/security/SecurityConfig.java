@@ -6,6 +6,7 @@ import com.sparta.springprepare.jwt.JwtAuthorizationFilter;
 import com.sparta.springprepare.util.CustomResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -80,8 +81,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
 //                        .requestMatchers("/api/s/**").authenticated()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
-                        .anyRequest().permitAll()
+//                        .requestMatchers("/user/login", "/user/signup").permitAll()
+                        .requestMatchers("/**").permitAll()
+//                        .anyRequest().authenticated()
         );
 
         return http.build();

@@ -46,13 +46,14 @@ public class UserReqDto {
         private String adminToken = "";
 
         public User toEntity(PasswordEncoder passwordEncoder) {
-            return User.builder()
+            User.UserBuilder userBuilder = User.builder()
                     .username(username)
                     .password(passwordEncoder.encode(password))
                     .email(email)
-                    .role(UserRoleEnum.USER)
-                    .createAt(LocalDateTime.now())
-                    .build();
+                    .role(admin ? UserRoleEnum.ADMIN : UserRoleEnum.USER) // 관리자인 경우 role을 ADMIN으로 설정
+                    .createAt(LocalDateTime.now());
+
+            return userBuilder.build();
         }
     }
 

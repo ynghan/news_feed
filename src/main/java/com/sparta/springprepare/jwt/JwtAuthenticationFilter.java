@@ -48,8 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     loginReqDto.getPassword());
 
             // loginUserService 호출 코드
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            return authentication;
+            return authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
             /*
              * InternalAuthenticationServiceException 해당 Exception으로 보내야

@@ -41,9 +41,9 @@ public class UserApiController {
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        User userPS = userService.signup(requestDto);
+        UserRespDto.JoinRespDto joinRespDto = userService.signup(requestDto);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", new UserRespDto.JoinRespDto(userPS)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", joinRespDto), HttpStatus.CREATED);
     }
 
     // 로그인 사용자 회원 정보 불러오기

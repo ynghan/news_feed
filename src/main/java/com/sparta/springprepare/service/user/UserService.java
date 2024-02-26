@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserService {
 
     // 회원가입
-    User signup(UserReqDto.JoinReqDto requestDto);
+    UserRespDto.JoinRespDto signup(UserReqDto.JoinReqDto requestDto);
 
     // 멀티 데이터(S3) 등록
     ProfileDto postProfile(MultipartFile file, User user);
