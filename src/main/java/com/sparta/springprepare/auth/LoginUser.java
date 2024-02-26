@@ -3,6 +3,7 @@ package com.sparta.springprepare.auth;
 import com.sparta.springprepare.domain.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,7 @@ import java.util.Collection;
 
 
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class LoginUser implements UserDetails {
 

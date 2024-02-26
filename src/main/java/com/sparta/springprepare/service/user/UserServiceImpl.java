@@ -119,8 +119,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CountDto getFollowerCount(User user) {
-        Optional<User> findUser = userRepository.findByUsername(user.getUsername());
+    public CountDto getFollowerCount(User loginUser) {
+        Optional<User> findUser = userRepository.findByUsername(loginUser.getUsername());
         List<Follow> followers = findUser.get().getFollowers();
         int count = followers.size();
         return new CountDto(count);

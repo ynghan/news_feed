@@ -92,6 +92,7 @@ public class UserApiController {
     @GetMapping("/profile")
     @ResponseBody
     public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal LoginUser loginUser) throws IOException {
+        log.info("로그인 유저 : " + loginUser.toString());
         ProfileEncodingDto profile = userService.getProfile(loginUser.getUser());
         log.info("Profile: {}", profile.getProfile());  // 로깅 추가
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 프로필 사진 불러오기 성공", profile), HttpStatus.OK);
