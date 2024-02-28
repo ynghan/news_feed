@@ -66,7 +66,7 @@ public class AdminApiController {
     // 관리자의 특정 게시물 수정하기
     @PutMapping("/{postId}/update")
     public ResponseEntity<?> updatePost(@RequestBody PostReqDto requestDto, @PathVariable(name="postId") Long postId) {
-        PostRespDto postRespDto = postService.updatePost(requestDto, postId);
+        PostRespDto postRespDto = postService.updateAnyPost(requestDto, postId);
         return new ResponseEntity<>(new ResponseDto<>(1, "관리자의 특정 게시물 수정", postRespDto), HttpStatus.OK);
     }
 

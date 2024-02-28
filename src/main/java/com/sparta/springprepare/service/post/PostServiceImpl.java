@@ -7,6 +7,8 @@ import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.postDto.PostReqDto;
 import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
+import com.sparta.springprepare.handler.ex.CustomApiException;
+import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
         Follow findFollowEntity = loginUser.getFollowers()
                 .stream().filter(follow -> follow.getFollowee().getId().equals(findUserId))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 팔로우한 사용자가 아닙니다."));
+                .findFirst().orElseThrow(() -> new CustomApiException(ErrorCode.NOT_FOLLOWING_USER));
 
         Page<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee(), pageable);
         return postList.map(PostRespDto::new);
@@ -65,7 +67,7 @@ public class PostServiceImpl implements PostService {
         return new CountDto(count);
     }
 
-    // 특정 게시물 수정하기
+    // 로그인 사용자 특정 게시물 수정하기
     public PostRespDto updatePost(Long postId, PostReqDto requestDto, User user) {
         User findUser = checkUserByUsername(user.getUsername());
         Post findPost = checkPost(postId);
@@ -96,7 +98,7 @@ public class PostServiceImpl implements PostService {
     }
 
     // 특정 게시물 수정
-    public PostRespDto updatePost(PostReqDto dto, Long postId) {
+    public PostRespDto updateAnyPost(PostReqDto dto, Long postId) {
         Post updatePost = checkPost(postId);
         updatePost.setContent(dto.getContent());
         Post savedPost = postRepository.save(updatePost);
@@ -105,14 +107,14 @@ public class PostServiceImpl implements PostService {
 
 
     private User checkUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findByUsername(username).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
     private User checkUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findById(id).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
     private Post checkPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+        return postRepository.findById(postId).orElseThrow(() -> new CustomApiException(ErrorCode.POST_NOT_EXIST));
     }
 }

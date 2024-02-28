@@ -4,9 +4,14 @@ import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.CommentLike;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.CommentLikeDto;
-import com.sparta.springprepare.repository.CommentLikeRepository;
+import com.sparta.springprepare.handler.ex.CustomApiException;
+import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.comment.CommentRepository;
+import com.sparta.springprepare.repository.commentlike.CommentLikeRepository;
+import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,13 +20,14 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public CommentLikeDto pushLikeToComment(Long commentId, User user) {
+    public CommentLikeDto pushCommentLike(Long commentId, User user) {
         Comment findComment = checkCommentById(commentId);
 
         if(findComment.getUser().equals(user)) {
-            throw new IllegalArgumentException("자신의 댓글에는 좋아요를 누를 수 없습니다.");
+            throw new CustomApiException(ErrorCode.SELF_COMMENTLIKE_NOT_ALLOWED);
         }
 
         CommentLike commentLike = new CommentLike(findComment, user);
@@ -30,16 +36,31 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     }
 
     @Override
-    public CommentLikeDto deleteLikeToComment(Long commentId, User user) {
-        CommentLike findCommentLike = commentLikeRepository.findAll().stream().filter(cl -> cl.getComment().getId().equals(commentId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("좋아요를 누른 댓글이 없습니다."));
+    public void deleteCommentLike(Long commentId, User user, Pageable pageable) {
 
-        commentLikeRepository.delete(findCommentLike);
-        return new CommentLikeDto(findCommentLike);
+        User userPS = checkUserById(user.getId());
+        Comment comment = checkCommentById(commentId);
+        Page<CommentLike> commentLikes = commentLikeRepository.findByComment(comment, pageable);
+
+        boolean isCommentLikeExist = false;
+
+        for (CommentLike commentLike : commentLikes) {
+            if(commentLike.getUser().getId().equals(userPS.getId())) {
+                isCommentLikeExist = true;
+                commentLikeRepository.deleteById(commentLike.getId());
+            }
+        }
+
+        if (!isCommentLikeExist) {
+            throw new CustomApiException(ErrorCode.CANNOT_UNLIKE);
+        }
     }
 
     private Comment checkCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+        return commentRepository.findById(commentId).orElseThrow(() -> new CustomApiException(ErrorCode.COMMENT_NOT_EXIST));
+    }
+
+    private User checkUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 }

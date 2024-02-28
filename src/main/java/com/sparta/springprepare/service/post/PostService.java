@@ -26,6 +26,6 @@ public interface PostService {
     // 특정 게시물 삭제
     PostRespDto deletePost(Long postId);
     // 특정 게시물 수정
-    PostRespDto updatePost(PostReqDto dto, Long postId);
+    PostRespDto updateAnyPost(PostReqDto dto, Long postId);
 
 }

@@ -3,6 +3,8 @@ package com.sparta.springprepare.service.follow;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.FollowDto;
+import com.sparta.springprepare.handler.ex.CustomApiException;
+import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.FollowRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class FollowServiceImpl implements FollowService {
                 .anyMatch(f -> f.getFollowee().getUsername().equals(followeeUsername));
 
         if (alreadyFollowing) { // 중복 검사
-            throw new IllegalArgumentException("이미 팔로우중인 사용자입니다.");
+            throw new CustomApiException(ErrorCode.ALREADY_FOLLOWING_USER);
         }
 
         Follow save = followRepository.save(new Follow(followeeUser, loginUser));
@@ -58,7 +60,7 @@ public class FollowServiceImpl implements FollowService {
         Follow follow = loginUser.getFollowers().stream() // 포함 유무 검사
                 .filter(f -> f.getFollowee().getUsername().equals(followeeUsername))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("팔로우중인 사용자가 아닙니다."));
+                .orElseThrow(() -> new CustomApiException(ErrorCode.NOT_FOLLOWING_USER));
 
         followRepository.delete(follow);
 
@@ -67,11 +69,11 @@ public class FollowServiceImpl implements FollowService {
 
 
     private User checkUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findByUsername(username).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
     private User checkUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findById(id).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
 }

@@ -6,6 +6,8 @@ import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
+import com.sparta.springprepare.handler.ex.CustomApiException;
+import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.comment.CommentRepository;
 import com.sparta.springprepare.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentRespDto updateCommentOfPost(Long commentId, CommentReqDto dto, LoginUser loginUser) {
         Comment findComment = checkCommentById(commentId);
         if(!Objects.equals(findComment.getUser().getUsername(), loginUser.getUser().getUsername())) {
-            throw new IllegalArgumentException("등록한 댓글이 아닙니다.");
+            throw new CustomApiException(ErrorCode.NOT_YOUR_COMMENT);
         }
         findComment.setContent(dto.getContent());
         Comment savedComment = commentRepository.save(findComment);
@@ -90,10 +92,10 @@ public class CommentServiceImpl implements CommentService {
 
 
     public Comment checkCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+        return commentRepository.findById(commentId).orElseThrow(() -> new CustomApiException(ErrorCode.COMMENT_NOT_EXIST));
     }
 
     public Post checkPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+        return postRepository.findById(postId).orElseThrow(() -> new CustomApiException(ErrorCode.POST_NOT_EXIST));
     }
 }

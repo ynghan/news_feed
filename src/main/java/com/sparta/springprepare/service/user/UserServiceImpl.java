@@ -5,6 +5,8 @@ import com.sparta.springprepare.domain.PasswordHistory;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.dto.userDto.*;
+import com.sparta.springprepare.handler.ex.CustomApiException;
+import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,20 +45,20 @@ public class UserServiceImpl implements UserService {
         // 회원 중복 확인
         Optional<User> checkUser = userRepository.findByUsername(username);
         if (checkUser.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            throw new CustomApiException(ErrorCode.DUPLICATE_USER);
         }
 
         // email 중복확인
         String email = joinReqDto.getEmail();
         Optional<User> checkEmail = userRepository.findByEmail(email);
         if (checkEmail.isPresent()) {
-            throw new IllegalArgumentException("중복된 Email 입니다.");
+            throw new CustomApiException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         // 사용자 ROLE 확인
         if (joinReqDto.isAdmin()) { // JoinReqDto의 admin 필드가 true일 경우
             if (!ADMIN_TOKEN.equals(joinReqDto.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+                throw new CustomApiException(ErrorCode.INCORRECT_ADMIN_PASSWORD);
             }
         }
 
@@ -201,12 +203,12 @@ public class UserServiceImpl implements UserService {
 
         // 2차 입력 비밀번호와 중복 확인
         if(!newPassword.equals(confirmNewPassword)) {
-            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+            throw new CustomApiException(ErrorCode.PASSWORD_MISMATCH);
         }
 
         // 기존 비밀번호와 중복 확인
         if(passwordEncoder.matches(newPassword, currentPassword)) {
-            throw new IllegalArgumentException("기존의 비밀번호와 동일합니다.");
+            throw new CustomApiException(ErrorCode.SAME_PASSWORD);
         }
 
         // 기존 비밀번호를 새로 생성한 엔티티의 password 필드에 저장
@@ -216,7 +218,7 @@ public class UserServiceImpl implements UserService {
         // loginUser와 연관된 모든 PasswordHistory 엔티티의 password 필드와 중복 확인
         boolean match = loginUser.getPassHis().stream().anyMatch(passwordHistory -> passwordEncoder.matches(newPassword, passwordHistory.getPassword()));
         if(match) {
-            throw new IllegalArgumentException("최근 3번안에 사용한 비밀번호 입니다.");
+            throw new CustomApiException(ErrorCode.RECENT_PASSWORD);
         }
 
         // 새로운 비밀번호를 사용자 엔티티 password 필드에 업데이트
@@ -229,7 +231,7 @@ public class UserServiceImpl implements UserService {
         if(loginUser.getPassHis().size() == 3) {
             PasswordHistory firstPassHis = loginUser.getPassHis().stream()
                     .min(Comparator.comparing(PasswordHistory::getCreatedAt))
-                    .orElseThrow(() -> new NoSuchElementException("비밀번호 변경 이력이 존재하지 않습니다."));
+                    .orElseThrow(() -> new CustomApiException(ErrorCode.NO_PASSWORD_CHANGE_HISTORY));
 
             passwordHistoryRepository.delete(firstPassHis);
         }
@@ -273,11 +275,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private User checkUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findByUsername(username).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
     private User checkUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findById(id).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
 }

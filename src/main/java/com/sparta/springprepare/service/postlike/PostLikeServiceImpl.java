@@ -4,6 +4,8 @@ import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.domain.PostLike;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.PostLikeDto;
+import com.sparta.springprepare.handler.ex.CustomApiException;
+import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.postlike.PostLikeRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
@@ -27,7 +29,7 @@ public class PostLikeServiceImpl implements PostLikeService {
         User userPS = checkUserByUsername(loginUser.getUsername());
 
         if(postPS.getUser().getId().equals(userPS.getId())) {
-            throw new IllegalArgumentException("자신의 게시물에는 좋아요를 누를 수 없습니다.");
+            throw new CustomApiException(ErrorCode.SELF_POSTLIKE_NOT_ALLOWED);
         }
 
         PostLike postLikePS = postLikeRepository.save(new PostLike(postPS, userPS));
@@ -47,7 +49,7 @@ public class PostLikeServiceImpl implements PostLikeService {
         PostLike userLike = postLikes.stream()
                 .filter(like -> like.getUser().getId().equals(user.getId()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자의 좋아요가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomApiException(ErrorCode.POSTLIKE_NOT_EXIST));
 
         // 좋아요 삭제
         postLikeRepository.deleteById(userLike.getId());
@@ -57,10 +59,10 @@ public class PostLikeServiceImpl implements PostLikeService {
 
 
     private User checkUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return userRepository.findByUsername(username).orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_EXIST));
     }
 
     private Post checkPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+        return postRepository.findById(postId).orElseThrow(() -> new CustomApiException(ErrorCode.POST_NOT_EXIST));
     }
 }
