@@ -1,10 +1,7 @@
 package com.sparta.springprepare.config.dummy;
 
 
-import com.sparta.springprepare.domain.Follow;
-import com.sparta.springprepare.domain.Post;
-import com.sparta.springprepare.domain.User;
-import com.sparta.springprepare.domain.UserRoleEnum;
+import com.sparta.springprepare.domain.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -69,6 +66,16 @@ public class DummyObject {
                 .id(id)
                 .content(content)
                 .user(user)
+                .build();
+    }
+
+
+    protected Comment newMockComment(Long id, String content, User user, Post post) {
+        return Comment.builder()
+                .id(id)
+                .content(content)
+                .user(user)
+                .post(post)
                 .build();
     }
 

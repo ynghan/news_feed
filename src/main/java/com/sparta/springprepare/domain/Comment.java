@@ -2,6 +2,7 @@ package com.sparta.springprepare.domain;
 
 import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,6 +38,14 @@ public class Comment extends Timestamped {
 
     public void patch(CommentReqDto requestDto, Post post, User user) {
         this.content = requestDto.getContent();
+        this.post = post;
+        this.user = user;
+    }
+
+    @Builder
+    public Comment(Long id, String content, Post post, User user) {
+        this.id = id;
+        this.content = content;
         this.post = post;
         this.user = user;
     }

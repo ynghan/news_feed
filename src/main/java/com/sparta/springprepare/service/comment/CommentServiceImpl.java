@@ -65,6 +65,10 @@ public class CommentServiceImpl implements CommentService {
 
     public CommentRespDto deleteCommentOfPost(Long commentId, LoginUser loginUser) {
         Comment findComment = checkCommentById(commentId);
+        if(!Objects.equals(findComment.getUser().getId(), loginUser.getUser().getId())) {
+            throw new CustomApiException(ErrorCode.NOT_YOUR_COMMENT);
+        }
+
         commentRepository.delete(findComment);
         return new CommentRespDto(findComment);
     }
