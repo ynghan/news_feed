@@ -52,6 +52,7 @@ public class UserApiController {
         UserInfoDto userInfoDto = userService.getUserInfo(loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 회원 정보 불러오기 성공", userInfoDto), HttpStatus.OK);
     }
+
     // 로그인 사용자 회원 정보 수정하기
     @PostMapping("/info")
     @ResponseBody
@@ -60,6 +61,7 @@ public class UserApiController {
         UserInfoDto userInfoDtoPS = userService.postUserInfo(userInfoDto, user);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 회원 정보 수정하기 성공", userInfoDtoPS), HttpStatus.OK);
     }
+
     // 로그인 사용자 한줄 소개 불러오기
     @GetMapping("/info/introduce")
     @ResponseBody
@@ -67,6 +69,7 @@ public class UserApiController {
         UserIntroduceDto userIntroduceDto = userService.getUserIntroduce(loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 불러오기 성공", userIntroduceDto), HttpStatus.OK);
     }
+
     // 로그인 사용자 한줄 소개 수정하기
     @PostMapping("/info/introduce")
     @ResponseBody
@@ -74,29 +77,33 @@ public class UserApiController {
         userService.postUserIntroduce(dto.getIntroduce(), loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", null), HttpStatus.OK);
     }
-    // 로그인 사용자의 팔로우한 사람 수 불러오기
+
+    // 로그인 사용자를 팔로우한 사람 수 불러오기
     @GetMapping("/followee/count")
     @ResponseBody
     public ResponseEntity<?> getUserFolloweeCount(@AuthenticationPrincipal LoginUser loginUser) {
         CountDto countDto = userService.getFolloweeCount(loginUser.getUser());
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자의 팔로우한 사람 수 불러오기 성공", countDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자를 팔로우한 사람 수 불러오기 성공", countDto), HttpStatus.OK);
     }
-    // 로그인 사용자의 팔로우한 사람 수 불러오기
+
+    // 로그인 사용자가 팔로우한 사람 수 불러오기
     @GetMapping("/follower/count")
     @ResponseBody
     public ResponseEntity<?> getUserFollowerCount(@AuthenticationPrincipal LoginUser loginUser) {
         CountDto countDto = userService.getFollowerCount(loginUser.getUser());
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자의 팔로우한 사람 수 불러오기 성공", countDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자가 팔로우한 사람 수 불러오기 성공", countDto), HttpStatus.OK);
     }
+
     // 로그인 사용자 프로필 사진 불러오기
     @GetMapping("/profile")
     @ResponseBody
     public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal LoginUser loginUser) throws IOException {
-        log.info("로그인 유저 : " + loginUser.toString());
+//        log.info("로그인 유저 이름 : " + loginUser.getUser().getUsername()); -> null
         ProfileEncodingDto profile = userService.getProfile(loginUser.getUser());
         log.info("Profile: {}", profile.getProfile());  // 로깅 추가
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 프로필 사진 불러오기 성공", profile), HttpStatus.OK);
     }
+
     // 로그인 사용자 프로필 사진 등록하기
     @PostMapping("/profile")
     @ResponseBody
@@ -105,7 +112,7 @@ public class UserApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 프로필 사진 등록하기 성공", profileDto), HttpStatus.OK);
     }
 
-    //이미지 조회
+    // S3 이미지 조회
     @GetMapping("/{username}/image")
     @ResponseBody
     public ResponseEntity<?> getUserPhotoUrl(@PathVariable(name="username") String username) {

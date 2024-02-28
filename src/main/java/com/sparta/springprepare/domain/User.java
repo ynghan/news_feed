@@ -44,6 +44,7 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
+
     private String nickname;
 
     @Column(nullable = false)
@@ -87,7 +88,7 @@ public class User {
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @Builder
-    public User(Long id, String profile, String photoImage, String introduce, String username, String password, String email, UserRoleEnum role, LocalDateTime createAt) {
+    public User(Long id, String profile, String photoImage, String introduce, String username, String password, String email, UserRoleEnum role, String nickname, LocalDateTime createAt) {
         this.id = id;
         this.profile = profile;
         this.photoImage = photoImage;
@@ -96,6 +97,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.nickname = nickname;
         this.createAt = createAt;
     }
 
@@ -104,11 +106,6 @@ public class User {
         this.username = requestDto.getUsername();
         this.password = requestDto.getPassword();
         this.email = requestDto.getEmail();
-    }
-
-
-    public void changeProfile(String profile) {
-        this.profile = profile;
     }
 
     public void patch(UserInfoDto dto) {
@@ -120,8 +117,6 @@ public class User {
             this.nickname = dto.getNickname();
         if (dto.getIntroduce() != null)
             this.introduce = dto.getIntroduce();
-        if (dto.getRole() != null)
-            this.role = dto.getRole();
     }
 
 }

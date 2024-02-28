@@ -68,6 +68,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ProfileEncodingDto getProfile(User user) throws IOException {
+        User userPS = checkUserById(user.getId());
+        String profile = userPS.getProfile();
+        Path path = Paths.get(profile);
+
+        byte[] imageBytes = Files.readAllBytes(path);
+        System.out.println(Arrays.toString(imageBytes));
+        String imageBase64 = Base64.encodeBase64String(imageBytes);
+
+        return new ProfileEncodingDto(imageBase64);
+    }
+
+    @Override
     public ProfileDto postProfile(MultipartFile file, User user) {
         // 파일을 저장할 디렉토리 경로
         String directory = "/Users/jeong-yeonghan/work/news_feed/spring-prepare/src/main/resources/static/image/";
@@ -86,9 +99,10 @@ public class UserServiceImpl implements UserService {
             Files.write(destination, file.getBytes());
 
             // 파일의 URL 또는 경로를 사용자의 프로필에 설정
-            user.changeProfile(destination.toString());
+            User userPS = checkUserById(user.getId());
+            userPS.setProfile(destination.toString());
 
-            userRepository.save(user);
+            userRepository.save(userPS);
 
             return new ProfileDto(destination.toString());
 
@@ -98,21 +112,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileEncodingDto getProfile(User user) throws IOException {
-        String profile = user.getProfile();
-        Path path = Paths.get(profile);
-
-        byte[] imageBytes = Files.readAllBytes(path);
-        String imageBase64 = Base64.encodeBase64String(imageBytes);
-
-        return new ProfileEncodingDto(imageBase64);
-    }
-
-    @Override
     @Transactional
     public CountDto getFolloweeCount(User user) {
-        Optional<User> findUser = userRepository.findByUsername(user.getUsername());
-        List<Follow> followees = findUser.get().getFollowees();
+        List<Follow> followees = checkUserById(user.getId()).getFollowees();
         int count = followees.size();
         return new CountDto(count);
     }
@@ -120,19 +122,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public CountDto getFollowerCount(User loginUser) {
-        Optional<User> findUser = userRepository.findByUsername(loginUser.getUsername());
-        List<Follow> followers = findUser.get().getFollowers();
+        List<Follow> followers = checkUserById(loginUser.getId()).getFollowers();
         int count = followers.size();
         return new CountDto(count);
     }
 
     @Override
     public UserInfoDto getUserInfo(User user) {
-        User findUser = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        if(findUser != null) {
-            return new UserInfoDto(findUser);
-        }
-        return null;
+        User findUser = checkUserById(user.getId());
+        return new UserInfoDto(findUser);
     }
 
     @Override
@@ -145,7 +143,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserIntroduceDto getUserIntroduce(User user) {
-        return new UserIntroduceDto(user.getIntroduce());
+        User userPS = checkUserById(user.getId());
+        return new UserIntroduceDto(userPS.getIntroduce());
     }
 
     @Override
@@ -157,8 +156,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProfileDto getPhotoUrl(String username) {
-        User findUser = checkUserByUsername(username);
-        String photoImage = findUser.getPhotoImage();
+        System.out.println(username);
+        User userPS = checkUserByUsername(username);
+        String photoImage = userPS.getPhotoImage();
+        System.out.println(userPS.getUsername());
+        System.out.println(photoImage);
         return new ProfileDto(photoImage);
     }
 
@@ -173,7 +175,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserInfoDto> findAllUsers() {
         List<User> findUsers = userRepository.findAll();
-        ArrayList<UserInfoDto> dtoList = new ArrayList<>();
+        List<UserInfoDto> dtoList = new ArrayList<>();
         for (User findUser : findUsers) {
             dtoList.add(new UserInfoDto(findUser));
         }
@@ -238,7 +240,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRespDto.GeneralRespDto deleteUserByAdmin(String username) {
         User deleteUser = checkUserByUsername(username);
-        userRepository.delete(deleteUser);
+        userRepository.deleteById(deleteUser.getId());
         return new UserRespDto.GeneralRespDto(deleteUser);
     }
 

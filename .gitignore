@@ -7,7 +7,7 @@ build/
 
 src/main/resources/application.yml
 src/main/java/com/sparta/springprepare/jwt/JwtVO.java
-
+src/main/generated/**
 ### STS ###
 .apt_generated
 .classpath

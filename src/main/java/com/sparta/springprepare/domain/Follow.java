@@ -3,6 +3,7 @@ package com.sparta.springprepare.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,5 +37,12 @@ public class Follow extends Timestamped {
     public Follow(User loginUser, User findFollowUser) {
         this.follower = findFollowUser; // 팔로우되는 사람
         this.followee = loginUser; // 팔로우 신청하는 사람
+    }
+
+    @Builder
+    public Follow(Long id, User follower, User followee) {
+        this.id = id;
+        this.follower = follower;
+        this.followee = followee;
     }
 }

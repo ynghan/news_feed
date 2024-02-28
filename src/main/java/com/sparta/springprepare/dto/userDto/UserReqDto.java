@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,6 +60,7 @@ public class UserReqDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     public static class PasswordReqDto {
 
         @NotBlank
