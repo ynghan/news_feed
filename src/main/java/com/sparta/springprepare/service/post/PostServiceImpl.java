@@ -54,6 +54,7 @@ public class PostServiceImpl implements PostService {
                 .stream().filter(follow -> follow.getFollowee().getId().equals(findUserId))
                 .findFirst().orElseThrow(() -> new CustomApiException(ErrorCode.NOT_FOLLOWING_USER));
 
+        // 팔로우한 사용자의 모든 게시물 조회
         Page<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee(), pageable);
         return postList.map(PostRespDto::new);
     }

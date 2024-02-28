@@ -2,6 +2,7 @@ package com.sparta.springprepare.config.dummy;
 
 
 import com.sparta.springprepare.domain.Follow;
+import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.domain.UserRoleEnum;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +10,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDateTime;
 
 public class DummyObject {
+
+    protected User newEmptyUser(Long id, String username) {
+        return User.builder()
+                .id(id)
+                .username(username)
+                .createAt(LocalDateTime.now())
+                .build();
+    }
+
 
     protected User newLoginUser(Long id, UserRoleEnum role) {
         return User.builder()
@@ -53,5 +63,13 @@ public class DummyObject {
                 .build();
     }
 
+
+    protected Post newMockPost(Long id, String content, User user) {
+        return Post.builder()
+                .id(id)
+                .content(content)
+                .user(user)
+                .build();
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.sparta.springprepare.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,5 +34,12 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+
+    @Builder
+    public Post(Long id, String content, User user) {
+        this.id = id;
+        this.content = content;
+        this.user = user;
+    }
 
 }
