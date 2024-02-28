@@ -79,4 +79,12 @@ public class DummyObject {
                 .build();
     }
 
+    protected CommentLike newMockCommentLike(Long id, Comment comment, User user) {
+        return CommentLike.builder()
+                .id(id)
+                .comment(comment)
+                .user(user)
+                .build();
+    }
+
 }
