@@ -21,19 +21,20 @@ public class FollowServiceImpl implements FollowService {
     private final FollowRepository followRepository;
 
 
-    // 특정 사용자의 팔로우 리스트 조회하기
+    // 특정 사용자가 팔로우한 리스트 조회하기
     public Page<FollowDto> findFollowListOfUser(String username, Pageable pageable) {
 
         Page<Follow> findFollowerEntities = userRepository.findWithFollowersByUsername(username, pageable);
 
-        return findFollowerEntities.map(FollowDto::new);
+        return findFollowerEntities.map(f -> (new FollowDto(f.getFollowee())));
     }
 
-    // 특정 사용자의 팔로위 리스트 조회하기
+    // 특정 사용자를 팔로우한 리스트 조회하기
     public Page<FollowDto> findFolloweeListOfUser(String username, Pageable pageable) {
         Page<Follow> findFolloweeEntities = userRepository.findWithFolloweesByUsername(username, pageable);
 
-        return findFolloweeEntities.map(FollowDto::new);
+
+        return findFolloweeEntities.map(f -> (new FollowDto(f.getFollower())));
     }
 
     // 로그인 사용자가 특정 사용자를 팔로우 목록에 추가.
@@ -49,11 +50,12 @@ public class FollowServiceImpl implements FollowService {
             throw new CustomApiException(ErrorCode.ALREADY_FOLLOWING_USER);
         }
 
-        Follow save = followRepository.save(new Follow(followeeUser, loginUser));
+        Follow save = followRepository.save(new Follow(loginUser, followeeUser));
         return new FollowDto(save.getFollowee());
     }
 
 
+    // 로그인 사용자가 팔로우한 사용자를 팔로우 목록에서 제거
     @Transactional
     public FollowDto deleteFollowee(String followeeUsername, User loginUser) {
         loginUser = checkUserById(loginUser.getId());

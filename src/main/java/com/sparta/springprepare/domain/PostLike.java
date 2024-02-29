@@ -2,6 +2,7 @@ package com.sparta.springprepare.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,13 @@ public class PostLike {
     private User user;
 
     public PostLike(Post post, User user) {
+        this.post = post;
+        this.user = user;
+    }
+
+    @Builder
+    public PostLike(Long id, Post post, User user) {
+        this.id = id;
         this.post = post;
         this.user = user;
     }

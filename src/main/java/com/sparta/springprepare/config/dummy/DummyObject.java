@@ -87,4 +87,12 @@ public class DummyObject {
                 .build();
     }
 
+    protected PostLike newMockPostLike(Long id, Post post, User user) {
+        return PostLike.builder()
+                .id(id)
+                .post(post)
+                .user(user)
+                .build();
+    }
+
 }

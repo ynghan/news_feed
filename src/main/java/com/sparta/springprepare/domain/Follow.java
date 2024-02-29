@@ -35,8 +35,8 @@ public class Follow extends Timestamped {
     private User followee;
 
     public Follow(User loginUser, User findFollowUser) {
-        this.follower = findFollowUser; // 팔로우되는 사람
-        this.followee = loginUser; // 팔로우 신청하는 사람
+        this.follower = loginUser; // 팔로우 신청하는 사람
+        this.followee = findFollowUser; // 팔로우되는 사람
     }
 
     @Builder

@@ -11,6 +11,7 @@ import com.sparta.springprepare.repository.postlike.PostLikeRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,7 +39,7 @@ public class PostLikeServiceImpl implements PostLikeService {
     }
 
     @Override
-    public PostLikeDto deleteLikeToPost(Long postId, User user, org.springframework.data.domain.Pageable pageable) {
+    public PostLikeDto deleteLikeToPost(Long postId, User user, Pageable pageable) {
         // 게시물 확인
         Post postPS = checkPost(postId);
 
