@@ -182,9 +182,11 @@ class UserServiceImplTest extends DummyObject {
 
         //when
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        userService.postUserIntroduce(introduce, user);
+        user.setIntroduce(introduce);
+        when(userRepository.save(any())).thenReturn(user);
+        UserIntroduceDto userIntroduceDto = userService.postUserIntroduce(introduce, user);
         //then
-        assertThat(user.getIntroduce()).isEqualTo(introduce);
+        assertThat(userIntroduceDto.getIntroduce()).isEqualTo(introduce);
     }
 
     @Test

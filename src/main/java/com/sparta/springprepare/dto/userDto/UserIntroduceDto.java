@@ -1,6 +1,7 @@
 package com.sparta.springprepare.dto.userDto;
 
 
+import com.sparta.springprepare.domain.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,5 +15,9 @@ public class UserIntroduceDto {
 
     public UserIntroduceDto(String introduce) {
         this.introduce = introduce;
+    }
+
+    public UserIntroduceDto(User user) {
+        this.introduce = user.getIntroduce();
     }
 }

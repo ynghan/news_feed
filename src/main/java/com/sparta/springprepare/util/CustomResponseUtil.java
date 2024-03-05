@@ -31,6 +31,7 @@ public class CustomResponseUtil {
             response.setContentType("application/json; charset=utf-8");
             response.setStatus(200);
             response.getWriter().print(responseBody); // 예쁘게 메시지를 포장하는 공통적인 응답 DTO를 만들어보자!
+            log.info("디버그 : response에 loginRespDto 생성 완료");
         } catch(Exception e) {
             log.error("서버 파싱 에러");
         }

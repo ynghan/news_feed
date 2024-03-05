@@ -150,10 +150,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void postUserIntroduce(String introduce, User user) {
+    public UserIntroduceDto postUserIntroduce(String introduce, User user) {
         User findUserPS = checkUserById(user.getId());
         findUserPS.setIntroduce(introduce);
-        userRepository.save(findUserPS);
+        User userPS = userRepository.save(findUserPS);
+        return new UserIntroduceDto(userPS);
+
     }
 
     @Override

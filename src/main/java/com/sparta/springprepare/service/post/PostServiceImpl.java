@@ -94,7 +94,7 @@ public class PostServiceImpl implements PostService {
     // 특정 게시물 삭제
     public PostRespDto deletePost(Long postId) {
         Post deletePost = checkPost(postId);
-        postRepository.delete(deletePost);
+        postRepository.deleteById(deletePost.getId());
         return new PostRespDto(deletePost);
     }
 

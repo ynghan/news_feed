@@ -74,8 +74,8 @@ public class UserApiController {
     @PostMapping("/info/introduce")
     @ResponseBody
     public ResponseEntity<?> postUserIntroduce(@RequestBody UserIntroduceDto dto, @AuthenticationPrincipal LoginUser loginUser) {
-        userService.postUserIntroduce(dto.getIntroduce(), loginUser.getUser());
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", null), HttpStatus.OK);
+        UserIntroduceDto userIntroduceDto = userService.postUserIntroduce(dto.getIntroduce(), loginUser.getUser());
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 한줄 소개 수정하기 성공", userIntroduceDto), HttpStatus.OK);
     }
 
     // 로그인 사용자를 팔로우한 사람 수 불러오기
