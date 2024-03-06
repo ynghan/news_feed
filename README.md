@@ -24,7 +24,7 @@ Java, Spring Boot, Spring Data JPA, Spring Security, MySQL, JWT, AWS S3, Mockito
 4. AOP 기능
 5. 단위 테스트 기능
 
-### api 명세서
+### API 명세서
 
 [API 명세서](https://documenter.getpostman.com/view/32531805/2sA2xccFim#dce2d61a-8708-4e39-82a7-7ce451e1bb27)
 
