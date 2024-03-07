@@ -1,0 +1,132 @@
+{
+  "aggregate": {
+    "counters": {
+      "vusers.created_by_name.0": 300,
+      "vusers.created": 300,
+      "errors.Invalid URL - localhost:8080/api/user/signup": 300,
+      "vusers.failed": 300
+    },
+    "rates": {},
+    "firstCounterAt": 1709558298307,
+    "lastCounterAt": 1709558357515,
+    "firstMetricAt": 1709558298307,
+    "lastMetricAt": 1709558357515,
+    "period": 1709558350000,
+    "summaries": {},
+    "histograms": {}
+  },
+  "intermediate": [
+    {
+      "counters": {
+        "vusers.created_by_name.0": 10,
+        "vusers.created": 10,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 10,
+        "vusers.failed": 10
+      },
+      "rates": {},
+      "firstCounterAt": 1709558298307,
+      "lastCounterAt": 1709558299514,
+      "firstMetricAt": 1709558298307,
+      "lastMetricAt": 1709558299514,
+      "period": "1709558290000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.0": 50,
+        "vusers.created": 50,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 50,
+        "vusers.failed": 50
+      },
+      "rates": {},
+      "firstCounterAt": 1709558300306,
+      "lastCounterAt": 1709558309514,
+      "firstMetricAt": 1709558300306,
+      "lastMetricAt": 1709558309514,
+      "period": "1709558300000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.0": 50,
+        "vusers.created": 50,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 50,
+        "vusers.failed": 50
+      },
+      "rates": {},
+      "firstCounterAt": 1709558310306,
+      "lastCounterAt": 1709558319514,
+      "firstMetricAt": 1709558310306,
+      "lastMetricAt": 1709558319514,
+      "period": "1709558310000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.0": 50,
+        "vusers.created": 50,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 50,
+        "vusers.failed": 50
+      },
+      "rates": {},
+      "firstCounterAt": 1709558320306,
+      "lastCounterAt": 1709558329514,
+      "firstMetricAt": 1709558320306,
+      "lastMetricAt": 1709558329514,
+      "period": "1709558320000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.0": 50,
+        "vusers.created": 50,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 50,
+        "vusers.failed": 50
+      },
+      "rates": {},
+      "firstCounterAt": 1709558330306,
+      "lastCounterAt": 1709558339514,
+      "firstMetricAt": 1709558330306,
+      "lastMetricAt": 1709558339514,
+      "period": "1709558330000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.0": 50,
+        "vusers.created": 50,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 50,
+        "vusers.failed": 50
+      },
+      "rates": {},
+      "firstCounterAt": 1709558340306,
+      "lastCounterAt": 1709558349514,
+      "firstMetricAt": 1709558340306,
+      "lastMetricAt": 1709558349514,
+      "period": "1709558340000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.0": 40,
+        "vusers.created": 40,
+        "errors.Invalid URL - localhost:8080/api/user/signup": 40,
+        "vusers.failed": 40
+      },
+      "rates": {},
+      "firstCounterAt": 1709558350306,
+      "lastCounterAt": 1709558357515,
+      "firstMetricAt": 1709558350306,
+      "lastMetricAt": 1709558357515,
+      "period": "1709558350000",
+      "summaries": {},
+      "histograms": {}
+    }
+  ]
+}
