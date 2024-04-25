@@ -37,13 +37,13 @@ public class CommentApiController {
         CommentRespDto commentRespDto = commentService.createCommentOfPost(postId, dto, loginUser);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 댓글 등록", commentRespDto), HttpStatus.OK);
     }
-    // 로그인 사용자의 댓글 수정하기
+    // 로그인 사용자의 댓글 수정하기 -> api 경로 수정하기 : /{postId}/comment/{commentId}
     @PutMapping("/comment/{commentId}")
     public ResponseEntity<?> updateCommentOfPost(@PathVariable(name="commentId") Long commentId, @RequestBody CommentReqDto dto, @AuthenticationPrincipal LoginUser loginUser) {
         CommentRespDto commentRespDto = commentService.updateCommentOfPost(commentId, dto, loginUser);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 사용자 댓글 수정", commentRespDto), HttpStatus.OK);
     }
-    // 로그인 사용자의 댓글 삭제하기
+    // 로그인 사용자의 댓글 삭제하기 -> api 경로 수정하기 : /{postId}/comment/{commentId}
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<?> deleteCommentOfPost(@PathVariable(name="commentId") Long commentId, @AuthenticationPrincipal LoginUser loginUser) {
         CommentRespDto commentRespDto = commentService.deleteCommentOfPost(commentId, loginUser);
