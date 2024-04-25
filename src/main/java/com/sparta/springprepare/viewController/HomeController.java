@@ -1,4 +1,4 @@
-package com.sparta.springprepare.controller;
+package com.sparta.springprepare.viewController;
 
 import com.sparta.springprepare.auth.LoginUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

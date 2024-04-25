@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
-// Controller 레이어로 끌어와보기 (숙제)
+
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

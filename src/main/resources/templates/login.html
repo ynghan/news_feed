@@ -53,6 +53,7 @@
     function onLogin() {
         let username = $('#username').val();
         let password = $('#password').val();
+        host = 'http://localhost:8080';
 
         $.ajax({
             type: "POST",
@@ -61,8 +62,12 @@
             data: JSON.stringify({username: username, password: password}),
         })
             .done(function (res, status, xhr) {
-                host = 'http://localhost:8080/';
-                window.location.href = '/'
+                const token = xhr.getResponseHeader('Authorization');
+                Cookies.set('Authorization', token, {path: '/'})
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    jqXHR.setRequestHeader('Authorization', token);
+                });
+                window.location.href = host + '/'
             })
             .fail(function (xhr, textStatus, errorThrown) {
                 console.log('statusCode: ' + xhr.status);

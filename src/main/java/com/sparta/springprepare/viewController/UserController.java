@@ -1,4 +1,4 @@
-package com.sparta.springprepare.controller;
+package com.sparta.springprepare.viewController;
 
 
 import com.sparta.springprepare.service.user.UserService;

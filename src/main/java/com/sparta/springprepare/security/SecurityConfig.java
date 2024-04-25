@@ -80,10 +80,10 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-//                        .requestMatchers("/api/s/**").authenticated()
+//                        .requestMatchers("/api/s/**").authenticated() // 해당 주소는 인증이 필요한 주소이다.
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
-//                        .requestMatchers("/user/login", "/user/signup").permitAll()
+                        .requestMatchers("/user/login", "/user/signup", "/api/posts").permitAll()
                         .requestMatchers("/**").permitAll()
 //                        .anyRequest().authenticated()
         );
