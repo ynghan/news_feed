@@ -12,4 +12,20 @@ public class PostController {
         return "feed";
     }
 
+    @GetMapping("/other")
+    public String otherPage() {
+        return "other";
+    }
+
+    @GetMapping("/boot")
+    public String bootPage() {
+        return "boot";
+    }
+
+    @GetMapping("/t1")
+    public String boot2Page() {
+        return "t1";
+    }
+
+
 }

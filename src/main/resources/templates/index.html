@@ -11,7 +11,6 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/basic.js}"></script>
     <title>피드 게시판</title>
     <link rel="icon" href="data:;base64,=">
 </head>
@@ -19,25 +18,33 @@
 <!--header-->
 <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
     <div id="user-profile">
-        <button id="profile-button" onclick="location.href ='/feed'" style="font-size: 20px; padding: 10px 20px;">내 피드</button>
+        <button id="profile-button" onclick= "location.href ='/feed'" style="font-size: 20px; padding: 10px 20px;">내 피드</button>
     </div>
 </div>
 <!--/header-->
 </body>
 </html>
 <script>
+
     function goIndexToFeed() {
-        $.ajax({
-            url: '/feed',
-            method: 'GET',
-            success: function(data) {
-                // 페이지 이동 처리
-                window.location.href ='/feed';
-            },
-            error: function(err) {
-                // 에러 처리
-                console.log(err);
-            }
-        });
+
+        // console.log("sibal")
+        // $.ajax({
+        //     url: '/feed',
+        //     headers: { 'Authorization': Cookies.get('Authorization') },
+        //     method: 'GET',
+        // })
+        //     .done(function (res, status, xhr) {
+        //         const newToken = xhr.getResponseHeader('Authorization');
+        //         // 새로운 토큰이 있다면 쿠키 업데이트
+        //         if (newToken) {
+        //             Cookies.set('Authorization', newToken, {path: '/'});
+        //         }
+        //         window.location.href = '/feed'; // 페이지 이동
+        //     })
+        //     .fail(function (xhr, textStatus, errorThrown) {
+        //         console.log('statusCode: ' + xhr.status);
+        //         window.location.href = '/api/user/login-page?error';
+        //     });
     }
 </script>

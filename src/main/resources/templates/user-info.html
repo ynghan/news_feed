@@ -11,7 +11,7 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/basic.js}"></script>
+<!--    <script th:src="@{/js/basic.js}"></script>-->
     <title>피드 게시판</title>
     <link rel="icon" href="data:;base64,=">
 </head>
@@ -98,24 +98,78 @@
         });
     }
 
-    function getUserInfo() {
-        $.ajax({
-            type: 'GET',
-            url: `/user/info`,
-            contentType: 'application/json',
-        })
-            .done(function (res, status, xhr) {
-                const username = res.username;
-                const isAdmin = !!res.admin;
+    function setProfile(event) {
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.onloadend = e => {
+            $('#profile-image').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
 
-                if (!username) {
-                    window.location.href = '/user/login';
+        let formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/user/profile',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                console.log("Image uploaded successfully.");
+            },
+            error(error, status, request) {
+                if (error.status === 403) {
+                    $('html').html(error.responseText);
                     return;
                 }
-
-            })
-            .fail(function (jqXHR, textStatus) {
                 logout();
-            });
+            }
+        });
+    }
+
+    function updateIntroduceMyself() {
+        var introduceMyself = document.getElementById('introduce-myself').value;
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/user/info/introduce',
+            data: {
+                introduce: introduceMyself
+            },
+            success: function(response) {
+                console.log('Introduce myself updated successfully.');
+            },
+            error: function(error) {
+                console.log('Failed to update introduce myself:', error);
+            }
+        });
+    }
+    // 게시물 업로드 하기
+    function uploadPost() {
+        var formData = new FormData();
+        formData.append('title', $('#post-title').val());
+        formData.append('content', $('#post-content').val());
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/posts',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                console.log("Post uploaded successfully.");
+                // 게시글 업로드에 성공한 후에는, GET 요청을 통해 게시글 목록을 다시 불러옵니다.
+                $('#postModal').modal('hide');
+                loadPosts();
+            },
+            error: function(error, status, request) {
+                if (error.status === 403) {
+                    $('html').html(error.responseText);
+                    return;
+                }
+                logout();
+            }
+        });
     }
 </script>

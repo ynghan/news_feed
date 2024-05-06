@@ -38,17 +38,17 @@
     $(document).ready(function () {
         // 토큰 삭제
         Cookies.remove('Authorization', {path: '/'});
+
+        let host = window.location.host;
+        console.log(host)
+
+        const href = location.href;
+        const queryString = href.substring(href.indexOf("?")+1)
+        if (queryString === 'error') {
+            const errorDiv = document.getElementById('login-failed');
+            errorDiv.style.display = 'block';
+        }
     });
-
-    let host = 'http://' + window.location.host;
-    console.log(host)
-
-    const href = location.href;
-    const queryString = href.substring(href.indexOf("?")+1)
-    if (queryString === 'error') {
-        const errorDiv = document.getElementById('login-failed');
-        errorDiv.style.display = 'block';
-    }
 
     function onLogin() {
         let username = $('#username').val();
@@ -63,13 +63,13 @@
         })
             .done(function (res, status, xhr) {
                 const token = xhr.getResponseHeader('Authorization');
-                Cookies.set('Authorization', token, {path: '/'})
+                Cookies.set('Authorization', token, {path: '/'}) // 아 모르겠네요
                 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                     jqXHR.setRequestHeader('Authorization', token);
                 });
-                window.location.href = host + '/'
+                window.location.href = host + '/' // CSR 인증 필터를 통과안하고 redirect 401 인증 실패 오류
             })
-            .fail(function (xhr, textStatus, errorThrown) {
+            .fail(function (xhr) {
                 console.log('statusCode: ' + xhr.status);
                 window.location.href = host + '/api/user/login-page?error'
             });
