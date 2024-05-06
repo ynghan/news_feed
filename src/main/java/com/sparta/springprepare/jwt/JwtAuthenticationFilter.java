@@ -68,6 +68,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 2. 세션값으로 토큰 생성
         String jwtToken = JwtProcess.create(loginUser);
 
+        // 서버에서 인증 요청이 왔을 때 확인하는거 토큰 값
+//        String cookieValue = URLEncoder.encode(jwtToken, "utf-8").replaceAll("\\+", "%20");
+//        Cookie authCookie = new Cookie("Authorization", cookieValue);
+//        authCookie.setHttpOnly(true);
+//        authCookie.setPath("/");
+//        response.addCookie(authCookie); // 응답에 쿠키 추가
+
+
         // 3. 토큰을 헤더에 담기
         response.addHeader(JwtVO.HEADER, jwtToken);
 

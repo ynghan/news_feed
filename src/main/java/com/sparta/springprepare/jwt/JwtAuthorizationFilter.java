@@ -13,12 +13,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
-/**
- * 모든 주소에서 동작함. (토큰 검증)
- */
+import static com.sparta.springprepare.jwt.JwtVO.TOKEN_PREFIX;
+
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -29,47 +29,44 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        // log.debug("디버그 : JwtAuthorizationFilter doFilterInternal()");
-
-        // 1. 헤더검증 후 헤더가 있다면 토큰 검증 후 임시 세션 생성
-        if (isHeaderVerify(request, response)) {
-            log.debug("디버그 : Jwt 토큰 검증 성공");
-            String token = "";
-            // 토큰 파싱하기 (Bearer 없애기)
-            if(request.getHeader(JwtVO.HEADER).isEmpty()) {
-                Cookie[] cookies = request.getCookies();
-                if (cookies != null) {
-                    for (Cookie cookie : cookies) {
-                        if (cookie.getName().equals("Authorization")) {
-                            token = cookie.getValue();
-                            break;
-                        }
-                    }
-                }
-            } else {
-                token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
+        log.debug("디버그 : JwtAuthorizationFilter doFilterInternal()");
+        String token = extractToken(request);
+        if (!token.isEmpty()) {
+            log.info("token 값이 담겼는지 확인 : " + token);
+            try {
+                LoginUser loginUser = JwtProcess.verify(token); // 토큰 검증 시도
+                // 임시 세션 생성
+                Authentication authentication = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                log.debug("토큰 검증 실패: " + e.getMessage());
             }
-
-            log.info("디버그 : " + token);
-            // 토큰 검증
-            LoginUser loginUser = JwtProcess.verify(token);
-
-            // 임시 세션 생성
-            Authentication authentication = new UsernamePasswordAuthenticationToken(loginUser,
-                    null, loginUser.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            log.debug("토큰이 비어있습니다.");
         }
-
-        // 2. 세션이 있는 경우와 없는 경우로 나뉘어서 컨트롤러로 진입함
         chain.doFilter(request, response);
     }
 
-    private boolean isHeaderVerify(HttpServletRequest request, HttpServletResponse response) {
+    private String extractToken(HttpServletRequest request) {
+        String token = "";
         String header = request.getHeader(JwtVO.HEADER);
-        if (header == null || !header.startsWith(JwtVO.TOKEN_PREFIX)) {
-            return false;
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+            token = header;
         } else {
-            return true;
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("Authorization".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
+            }
         }
+        if (StringUtils.hasText(token) && token.startsWith("Bearer%20")) {
+            // URL 인코딩된 공백(%20)을 실제 공백으로 치환하고, "Bearer " 부분을 제거
+            return token.replaceFirst("Bearer%20", "").trim();
+        }
+        return token;
     }
 }
