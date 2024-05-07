@@ -67,10 +67,9 @@ public class SecurityConfig {
         // 필터 적용
         http.with(new CustomSecurityFilterManager(), CustomSecurityFilterManager::getClass);
 
-
         // 인증 실패
         http.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
-            CustomResponseUtil.unAuthentication(response, "로그인을 진행해 주세요"/*, HttpStatus.UNAUTHORIZED */);
+            CustomResponseUtil.fail(response, "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
         }));
 
         // 권한 실패

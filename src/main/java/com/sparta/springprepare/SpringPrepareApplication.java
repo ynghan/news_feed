@@ -13,10 +13,10 @@ public class SpringPrepareApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SpringPrepareApplication.class, args);
-        String[] iocNames = context.getBeanDefinitionNames();
-        for (String name : iocNames) {
-            System.out.println(name);
-        }
+//        String[] iocNames = context.getBeanDefinitionNames();
+//        for (String name : iocNames) {
+//            System.out.println(name);
+//        }
     }
 
 }

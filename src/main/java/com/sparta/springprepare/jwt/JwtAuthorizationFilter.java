@@ -32,17 +32,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
          log.debug("디버그 : JwtAuthorizationFilter doFilterInternal()");
 
         // 1. 헤더검증 후 헤더가 있다면 토큰 검증 후 임시 세션 생성
-        if (isHeaderVerify(request, response)) {
+        if (isHeaderVerify(request, response)) { // 토큰이 존재한다.
             log.debug("디버그 : Jwt 토큰 검증 성공");
             // 토큰 파싱하기 (Bearer 없애기)
             String token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
+            LoginUser loginUser = JwtProcess.verify(token); // 토큰 검증
 
-            // 토큰 검증
-            LoginUser loginUser = JwtProcess.verify(token);
-
-            // 임시 세션 생성
+            // 임시 세션 (UserDetails 타입 or username(현재 null이라 넣을 수 없음))
             Authentication authentication = new UsernamePasswordAuthenticationToken(loginUser,
-                    null, loginUser.getAuthorities());
+                    null, loginUser.getAuthorities()/* 권한 */);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         // 2. 세션이 있는 경우와 없는 경우로 나뉘어서 컨트롤러로 진입함
