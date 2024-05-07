@@ -87,7 +87,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
                         .anyRequest().permitAll()
         );
-
         return http.build();
     }
 
