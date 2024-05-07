@@ -1,0 +1,26 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 10
+      arrivalRate: 3
+      name: Warm up
+  processors:
+    - './saveToken.js' # 토큰을 저장하는 스크립트 지정
+  payload:
+    path: "id-password.csv"
+    fields:
+      - "username"
+
+
+scenarios:
+  - name: "login and use post function"
+    flow:
+      - post:
+          url: "/api/login"
+          json:
+            username: "dudgks56"
+            password: "dudgks56!!"
+      - get:
+          url: "/api/posts"
+          headers:
+            Authorization: "{{ token }}"

@@ -40,8 +40,8 @@
         Cookies.remove('Authorization', {path: '/'});
     });
 
-    let host = 'http://' + window.location.host;
-    console.log(host)
+
+    const host = 'http://' + window.location.host;
 
     const href = location.href;
     const queryString = href.substring(href.indexOf("?")+1)
@@ -53,7 +53,6 @@
     function onLogin() {
         let username = $('#username').val();
         let password = $('#password').val();
-        host = 'http://localhost:8080';
 
         $.ajax({
             type: "POST",
@@ -68,6 +67,7 @@
                     jqXHR.setRequestHeader('Authorization', token);
                 });
                 window.location.href = host + '/'
+
             })
             .fail(function (xhr, textStatus, errorThrown) {
                 console.log('statusCode: ' + xhr.status);
