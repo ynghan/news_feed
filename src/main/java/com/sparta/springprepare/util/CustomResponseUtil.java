@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springprepare.dto.ResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 @Slf4j
 public class CustomResponseUtil {
+    private static final Logger log = LoggerFactory.getLogger(CustomResponseUtil.class);
 
-    public static void unAthentication(HttpServletResponse response, String msg) {
+    public static void unAuthentication(HttpServletResponse response, String msg) {
         try {
             ObjectMapper om = new ObjectMapper();
             ResponseDto<?> responseDto = new ResponseDto<>(-1, msg, null);

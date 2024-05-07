@@ -60,6 +60,7 @@ public class SecurityConfig {
                 sessionManageMent.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // react, 앱으로 요청할 예정
         http.formLogin(AbstractHttpConfigurer::disable);
+
         // httpBasic은 브라우저가 팝업창을 이용해서 사용자 인증을 진행한다.
         http.httpBasic(AbstractHttpConfigurer::disable);
 
@@ -69,7 +70,7 @@ public class SecurityConfig {
 
         // 인증 실패
         http.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
-            CustomResponseUtil.fail(response, "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
+            CustomResponseUtil.unAuthentication(response, "로그인을 진행해 주세요"/*, HttpStatus.UNAUTHORIZED */);
         }));
 
         // 권한 실패
@@ -80,12 +81,11 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-//                        .requestMatchers("/api/s/**").authenticated() // 해당 주소는 인증이 필요한 주소이다.
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/user/login", "/user/signup").permitAll()
+                        .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
-                        .requestMatchers("/user/login", "/user/signup", "/api/posts").permitAll()
-                        .requestMatchers("/**").permitAll()
-//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
         );
 
         return http.build();

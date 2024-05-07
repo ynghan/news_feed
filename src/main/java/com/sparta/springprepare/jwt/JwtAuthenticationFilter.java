@@ -68,6 +68,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 2. 세션값으로 토큰 생성
         String jwtToken = JwtProcess.create(loginUser);
 
+//        String encodedToken = URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
+        // 3. 쿠키 생성 및 설정
+//        Cookie cookie = new Cookie(JwtVO.HEADER, encodedToken); // COOKIE_NAME은 쿠키의 이름을 나타내는 상수입니다.
+//        cookie.setHttpOnly(true); // JavaScript를 통한 접근 방지
+////        cookie.setSecure(true); // HTTPS 통신에서만 쿠키 전송
+//        cookie.setPath("/"); // 쿠키가 전송될 수 있는 서버 경로
+//        // 필요하다면 쿠키의 유효시간도 설정할 수 있습니다. 예: cookie.setMaxAge(60*60*24); // 24시간
+//
+//        // 쿠키를 응답에 추가
+//        response.addCookie(cookie);
+
         // 3. 토큰을 헤더에 담기
         response.addHeader(JwtVO.HEADER, jwtToken);
 
