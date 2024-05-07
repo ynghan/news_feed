@@ -30,7 +30,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
          log.debug("디버그 : JwtAuthorizationFilter doFilterInternal()");
-        
+
         // 1. 헤더검증 후 헤더가 있다면 토큰 검증 후 임시 세션 생성
         if (isHeaderVerify(request, response)) {
             log.debug("디버그 : Jwt 토큰 검증 성공");
