@@ -9,13 +9,10 @@ import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.handler.ex.CustomApiException;
 import com.sparta.springprepare.handler.ex.ErrorCode;
-import com.sparta.springprepare.repository.post.PostRedisRepository;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,16 +50,18 @@ public class PostServiceImpl implements PostService {
 
     // 조회할 사용자가 로그인 사용자가 팔로우한 사용자 목록에 포함되어 있어야 사용자의 게시물을 조회할 수 있다.
     @Transactional
+    @Cacheable(value = "post", key = "'user:' + #followUsername")
     public Page<PostRespDto> getUserPosts(String followUsername, User loginUser, Pageable pageable) {
+        log.warn("사용자 게시물 조회, followUsername: {}", followUsername); // 로그 추가
         Long findUserId = checkUserByUsername(followUsername).getId();
         loginUser = checkUserById(loginUser.getId());
-
         Follow findFollowEntity = loginUser.getFollowers()
                 .stream().filter(follow -> follow.getFollowee().getId().equals(findUserId))
                 .findFirst().orElseThrow(() -> new CustomApiException(ErrorCode.NOT_FOLLOWING_USER));
 
         // 팔로우한 사용자의 모든 게시물 조회
         Page<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee(), pageable);
+
         return postList.map(PostRespDto::new);
     }
 

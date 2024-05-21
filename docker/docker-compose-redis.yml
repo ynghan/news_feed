@@ -1,0 +1,9 @@
+# version: "3"
+# docker-compose v2.25.0 이상 버전부터는 docker-compose.yaml파일의 최상단에 작성된 version : '3' 이 필요없어졌다고 한다.
+
+services:
+  aroundhub_redis:
+    image: redis:7.0.0
+    restart: always
+    ports:
+      - "6379:6379"

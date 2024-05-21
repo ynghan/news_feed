@@ -25,10 +25,4 @@ public class PostRespDto implements Serializable {
         this.content = post.getContent();
         this.userId = post.getUser().getId();
     }
-
-    public PostRespDto(PostRedisRespDto dto) {
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-        this.userId = dto.getUserId();
-    }
 }

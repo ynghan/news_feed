@@ -1,6 +1,5 @@
-package com.sparta.springprepare.security;
+package com.sparta.springprepare.config.security;
 
-import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.jwt.JwtAuthenticationFilter;
 import com.sparta.springprepare.jwt.JwtAuthorizationFilter;
 import com.sparta.springprepare.util.CustomResponseUtil;
@@ -34,7 +33,7 @@ public class SecurityConfig {
     }
 
     // JWT 필터 등록이 필요함
-    public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
+    public static class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
 
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
@@ -81,9 +80,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/user/login", "/user/signup").permitAll()
-                        .requestMatchers("/api/user/**").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
+//                        .requestMatchers("/api/user/signup").permitAll()
+//                        .requestMatchers("/api/user/**").authenticated()
+//                        .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
                         .anyRequest().permitAll()
         );
         return http.build();
@@ -96,7 +95,7 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (JavaScript 요청 허용)
         configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용(프론트 앤드 IP만 허용 react)
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
-
+        configuration.addExposedHeader("Authorization"); // 옛날에는 디폴트였다. 지금은 아님
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
