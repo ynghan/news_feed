@@ -20,8 +20,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     public Page<Post> findAllByUser(User user, Pageable pageable) {
         var limit = jpaQueryFactory.selectFrom(post)
                 .where(post.user.eq(user))
-                .offset(0)
-                .limit(10);
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
         limit.orderBy(post.createdAt.asc());
 
@@ -34,4 +34,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         return PageableExecutionUtils.getPage(posts, pageable, () -> totalSize);
     }
+
+    @Override
+    public long countByUser(User user) {
+        return jpaQueryFactory.select(Wildcard.count)
+                .from(post)
+                .where(post.user.eq(user))
+                .fetch().get(0);
+    }
+
 }

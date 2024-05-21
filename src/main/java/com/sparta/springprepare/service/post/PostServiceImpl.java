@@ -9,9 +9,14 @@ import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.handler.ex.CustomApiException;
 import com.sparta.springprepare.handler.ex.ErrorCode;
+import com.sparta.springprepare.repository.post.PostRedisRepository;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -32,6 +38,7 @@ public class PostServiceImpl implements PostService {
     public PostRespDto createPost(PostReqDto requestDto, Long userId) {
         User findUser = checkUserById(userId);
         Post post = new Post();
+        post.setTitle(requestDto.getTitle());
         post.setContent(requestDto.getContent());
         post.setUser(findUser);
         Post savePost = postRepository.save(post);
@@ -61,10 +68,7 @@ public class PostServiceImpl implements PostService {
 
     // 게시물 개수 불러오기
     public CountDto getPostCount(User user, Pageable pageable) {
-        Page<Post> postList = postRepository.findAllByUser(user, pageable);
-
-        long count = postList.getSize();
-
+        long count = postRepository.countByUser(user);
         return new CountDto(count);
     }
 

@@ -19,6 +19,8 @@ public class Post extends Timestamped {
     @Column(name = "post_id")
     private Long id;
 
+
+    private String title;
     private String content;
 
     /**
@@ -34,10 +36,13 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostLike> postLikse = new ArrayList<>();
 
     @Builder
-    public Post(Long id, String content, User user) {
+    public Post(Long id, String title, String content, User user) {
         this.id = id;
+        this.title = title;
         this.content = content;
         this.user = user;
     }
