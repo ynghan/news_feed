@@ -8,6 +8,7 @@ import com.sparta.springprepare.dto.PostLikeDto;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.postlike.PostLikeRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.postlike.Impl.PostLikeServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

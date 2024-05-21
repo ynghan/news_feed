@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service.post;
+package com.sparta.springprepare.service.post.Impl;
 
 
 import com.sparta.springprepare.domain.Follow;
@@ -11,6 +11,7 @@ import com.sparta.springprepare.handler.ex.CustomApiException;
 import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

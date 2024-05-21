@@ -9,6 +9,7 @@ import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.post.Impl.PostServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

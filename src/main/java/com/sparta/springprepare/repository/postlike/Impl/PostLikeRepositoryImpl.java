@@ -1,8 +1,9 @@
-package com.sparta.springprepare.repository.postlike;
+package com.sparta.springprepare.repository.postlike.Impl;
 
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.springprepare.domain.PostLike;
+import com.sparta.springprepare.repository.postlike.PostLikeRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

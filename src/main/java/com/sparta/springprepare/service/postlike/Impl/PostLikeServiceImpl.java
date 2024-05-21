@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service.postlike;
+package com.sparta.springprepare.service.postlike.Impl;
 
 import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.domain.PostLike;
@@ -9,6 +9,7 @@ import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.post.PostRepository;
 import com.sparta.springprepare.repository.postlike.PostLikeRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.postlike.PostLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

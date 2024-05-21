@@ -1,10 +1,11 @@
-package com.sparta.springprepare.repository.commentlike;
+package com.sparta.springprepare.repository.commentlike.Impl;
 
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.CommentLike;
 import com.sparta.springprepare.domain.QComment;
+import com.sparta.springprepare.repository.commentlike.CommentLikeRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import static com.sparta.springprepare.domain.QCommentLike.commentLike;
 
 @RequiredArgsConstructor
-public class CommentLikeRepositoryImpl implements CommentLikeRepositoryCustom{
+public class CommentLikeRepositoryImpl implements CommentLikeRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 

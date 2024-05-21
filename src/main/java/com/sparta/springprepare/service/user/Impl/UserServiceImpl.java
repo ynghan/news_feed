@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service.user;
+package com.sparta.springprepare.service.user.Impl;
 
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.PasswordHistory;
@@ -9,6 +9,7 @@ import com.sparta.springprepare.handler.ex.CustomApiException;
 import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;

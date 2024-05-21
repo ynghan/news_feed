@@ -9,7 +9,7 @@ import com.sparta.springprepare.dto.userDto.AuthorityDto;
 import com.sparta.springprepare.dto.userDto.UserInfoDto;
 import com.sparta.springprepare.dto.userDto.UserRespDto;
 import com.sparta.springprepare.service.comment.CommentService;
-import com.sparta.springprepare.service.comment.CommentServiceImpl;
+import com.sparta.springprepare.service.comment.Impl.CommentServiceImpl;
 import com.sparta.springprepare.service.post.PostService;
 import com.sparta.springprepare.service.user.UserService;
 import org.springframework.http.HttpStatus;

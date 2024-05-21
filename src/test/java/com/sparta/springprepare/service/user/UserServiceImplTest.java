@@ -8,6 +8,7 @@ import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.dto.userDto.*;
 import com.sparta.springprepare.repository.PasswordHistoryRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.user.Impl.UserServiceImpl;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

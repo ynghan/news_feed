@@ -1,9 +1,10 @@
-package com.sparta.springprepare.repository.user;
+package com.sparta.springprepare.repository.user.Impl;
 
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
+import com.sparta.springprepare.repository.user.UserRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

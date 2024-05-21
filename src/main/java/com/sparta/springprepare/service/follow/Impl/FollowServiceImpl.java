@@ -1,12 +1,13 @@
-package com.sparta.springprepare.service.follow;
+package com.sparta.springprepare.service.follow.Impl;
 
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.User;
 import com.sparta.springprepare.dto.FollowDto;
 import com.sparta.springprepare.handler.ex.CustomApiException;
 import com.sparta.springprepare.handler.ex.ErrorCode;
-import com.sparta.springprepare.repository.FollowRepository;
+import com.sparta.springprepare.repository.follow.FollowRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.follow.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

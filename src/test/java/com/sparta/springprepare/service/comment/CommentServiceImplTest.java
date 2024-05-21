@@ -9,6 +9,7 @@ import com.sparta.springprepare.dto.commentDto.CommentReqDto;
 import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.repository.comment.CommentRepository;
 import com.sparta.springprepare.repository.post.PostRepository;
+import com.sparta.springprepare.service.comment.Impl.CommentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

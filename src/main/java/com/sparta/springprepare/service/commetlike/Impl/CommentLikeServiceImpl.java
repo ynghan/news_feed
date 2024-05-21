@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service.commetlike;
+package com.sparta.springprepare.service.commetlike.Impl;
 
 import com.sparta.springprepare.domain.Comment;
 import com.sparta.springprepare.domain.CommentLike;
@@ -9,6 +9,7 @@ import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.comment.CommentRepository;
 import com.sparta.springprepare.repository.commentlike.CommentLikeRepository;
 import com.sparta.springprepare.repository.user.UserRepository;
+import com.sparta.springprepare.service.commetlike.CommentLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

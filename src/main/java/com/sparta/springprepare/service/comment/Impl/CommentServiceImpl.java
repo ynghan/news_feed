@@ -1,4 +1,4 @@
-package com.sparta.springprepare.service.comment;
+package com.sparta.springprepare.service.comment.Impl;
 
 
 import com.sparta.springprepare.auth.LoginUser;
@@ -10,6 +10,7 @@ import com.sparta.springprepare.handler.ex.CustomApiException;
 import com.sparta.springprepare.handler.ex.ErrorCode;
 import com.sparta.springprepare.repository.comment.CommentRepository;
 import com.sparta.springprepare.repository.post.PostRepository;
+import com.sparta.springprepare.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

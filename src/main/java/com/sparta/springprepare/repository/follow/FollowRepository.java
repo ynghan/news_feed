@@ -1,4 +1,4 @@
-package com.sparta.springprepare.repository;
+package com.sparta.springprepare.repository.follow;
 
 import com.sparta.springprepare.domain.Follow;
 import org.springframework.data.jpa.repository.JpaRepository;
