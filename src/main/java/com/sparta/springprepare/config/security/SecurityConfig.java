@@ -1,5 +1,6 @@
 package com.sparta.springprepare.config.security;
 
+import com.sparta.springprepare.domain.UserRoleEnum;
 import com.sparta.springprepare.jwt.JwtAuthenticationFilter;
 import com.sparta.springprepare.jwt.JwtAuthorizationFilter;
 import com.sparta.springprepare.util.CustomResponseUtil;
@@ -80,9 +81,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//                        .requestMatchers("/api/user/signup").permitAll()
-//                        .requestMatchers("/api/user/**").authenticated()
-//                        .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
+                        .requestMatchers("/api/user/signup").permitAll()
+                        .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers("/api/admin/**").hasRole("" + UserRoleEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도
                         .anyRequest().permitAll()
         );
         return http.build();
