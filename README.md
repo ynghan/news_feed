@@ -7,6 +7,8 @@
 * 빌드 툴: Gradle
 * 프레임워크: SpringBoot 3.2.2
 
+<br>
+
 ### 기술 스택
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -22,12 +24,23 @@
 ![QueryDSL](https://img.shields.io/badge/QueryDSL-2496ED?style=for-the-badge&logo=querydsl&logoColor=white)
 ![SpringJpa](https://img.shields.io/badge/SpringJpa-6DB33F?style=for-the-badge&logo=jpa&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-0769AD?style=for-the-badge)
+
+<br>
+
 ### 전체 시스템 구조
-![news_feed 전체 구성도.png](..%2Fimage%2Fnews_feed%20%EC%A0%84%EC%B2%B4%20%EA%B5%AC%EC%84%B1%EB%8F%84.png)
+<img alt="news_feed 전체 구성도" src="https://github.com/ynghan/news_feed/assets/119781387/7eda7c8a-81e2-4920-940c-eb7d291e0076" width="600" height="450">
+
+<br>
+<br>
+
 ### 데이터베이스 구조
-![ERD 구성도.png](..%2Fimage%2FERD%20%EA%B5%AC%EC%84%B1%EB%8F%84.png)
-### api 명세서
-[API 명세서](https://documenter.getpostman.com/view/32531805/2sA2xccFim#dce2d61a-8708-4e39-82a7-7ce451e1bb27)
+<img alt="ERD 구성도" src="https://github.com/ynghan/news_feed/assets/119781387/e16cec02-8d08-4bc1-a5d4-488b8a06c4a7" width="600" height="450">
+
+<br>
+
+### api 명세서([보러가기](https://documenter.getpostman.com/view/32531805/2sA2xccFim#dce2d61a-8708-4e39-82a7-7ce451e1bb27))
+
+<br>
 
 ### 주요 기능
 
@@ -45,9 +58,12 @@
 
 * 댓글 / 좋아요(게시글, 댓글) / 팔로우
 
+<br>
+
 ### 성능 개선
 * Redis 캐싱을 사용한 조회 API 처리량 개선
   * TPS : 414.3 -> 509.4 (약 22.95% 성능 개선)
+<br>
 
 ### 단위 테스트
 * Jwt 인증/인가 테스트
