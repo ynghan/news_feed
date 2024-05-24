@@ -4,6 +4,7 @@ package com.sparta.springprepare.service.post.Impl;
 import com.sparta.springprepare.domain.Follow;
 import com.sparta.springprepare.domain.Post;
 import com.sparta.springprepare.domain.User;
+import com.sparta.springprepare.dto.commentDto.CommentRespDto;
 import com.sparta.springprepare.dto.postDto.PostReqDto;
 import com.sparta.springprepare.dto.postDto.PostRespDto;
 import com.sparta.springprepare.dto.userDto.CountDto;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sparta.springprepare.dto.postDto.PostRespDto.PostDetailRespDto;
 
 @Slf4j
 @Service
@@ -49,8 +52,44 @@ public class PostServiceImpl implements PostService {
         return postList.map(PostRespDto::new);
     }
 
+    // 특정 게시물 자세히 보기
+    @Transactional(readOnly = true)
+    public PostDetailRespDto getDetailPost(User loginUser, Long postId) {
+        // 게시물 조회
+        Post post = postRepository.findByIdWithUser(postId).orElseThrow(() -> new CustomApiException(ErrorCode.POST_NOT_EXIST));
+
+        // 게시물의 작성자가 로그인 사용자가 팔로우한 사용자이거나, 로그인 사용자 자신인 경우에만 접근 허용
+        if (!post.getUser().getId().equals(loginUser.getId())) { // 게시물 작성자.eqauls(로그인 사용자) 가 아니라면
+//            System.out.println("loginUserId : " + loginUser.getId());
+            boolean isFollowing = post.getUser().getFollowees().stream()
+                    .anyMatch(
+                            follow -> follow.getFollower().getId()
+                                    .equals(loginUser.getId()));
+//            System.out.println("isFollowing" + isFollowing);
+            if (!isFollowing) {
+                throw new CustomApiException(ErrorCode.NOT_FOLLOWING_USER);
+            }
+        }
+
+        // 댓글과 각 댓글의 좋아요 수 조회
+        List<CommentRespDto> commentRespDtos = post.getComments().stream()
+                .map(CommentRespDto::new)
+                .toList();
+
+        int postLikeCount = post.getPostLikes().size();
+
+        return new PostDetailRespDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getUser().getUsername(),
+                postLikeCount,
+                commentRespDtos
+        );
+    }
+
     // 조회할 사용자가 로그인 사용자가 팔로우한 사용자 목록에 포함되어 있어야 사용자의 게시물을 조회할 수 있다.
-    @Transactional
+    @Transactional(readOnly = true)
     @Cacheable(value = "post", key = "'user:' + #followUsername")
     public Page<PostRespDto> getUserPosts(String followUsername, User loginUser, Pageable pageable) {
         log.warn("사용자 게시물 조회, followUsername: {}", followUsername); // 로그 추가
@@ -62,7 +101,6 @@ public class PostServiceImpl implements PostService {
 
         // 팔로우한 사용자의 모든 게시물 조회
         Page<Post> postList = postRepository.findAllByUser(findFollowEntity.getFollowee(), pageable);
-
         return postList.map(PostRespDto::new);
     }
 

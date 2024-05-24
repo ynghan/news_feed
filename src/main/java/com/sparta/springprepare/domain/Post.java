@@ -37,7 +37,7 @@ public class Post extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", orphanRemoval = true)
-    private List<PostLike> postLikse = new ArrayList<>();
+    private List<PostLike> postLikes = new ArrayList<>();
 
     @Builder
     public Post(Long id, String title, String content, User user) {

@@ -14,11 +14,13 @@ public class CommentRespDto {
     private Long userId;
     private Long postId;
     private String content;
+    private int likeCount;
 
     public CommentRespDto(Comment comment) {
         this.commentId = comment.getId();
         this.userId = comment.getUser().getId();
         this.content = comment.getContent();
         this.postId = comment.getPost().getId();
+        this.likeCount = comment.getCommentLikes().size();
     }
 }

@@ -10,12 +10,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.util.Optional;
+
 import static com.sparta.springprepare.domain.QPost.post;
 
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public Optional<Post> findByIdWithUser(Long postId) {
+        Post result = jpaQueryFactory.selectFrom(post)
+                .join(post.user).fetchJoin()
+                .where(post.id.eq(postId))
+                .fetchOne();
+        return Optional.ofNullable(result);
+    }
 
     @Override
     public Page<Post> findAllByUser(User user, Pageable pageable) {
